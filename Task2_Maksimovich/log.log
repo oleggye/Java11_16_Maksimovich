@@ -1,0 +1,44 @@
+2017-01-16 01:12:25,846 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] Error in the process of equipment report generating ! 
+2017-01-16 01:12:25,858 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] by.tc.eq.service.exception.ServiceException: Ошибка при получении отчета 
+2017-01-16 01:14:31,502 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] Error in the process of equipment report generating ! 
+2017-01-16 01:14:31,516 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] by.tc.eq.service.exception.ServiceException: Ошибка при получении отчета 
+2017-01-16 01:36:26,570 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] Error in the process of equipment report generating ! 
+2017-01-16 01:36:26,584 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] by.tc.eq.service.exception.ServiceException: Ошибка при получении отчета 
+2017-01-16 01:38:16,626 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] Error in the process of equipment report generating ! 
+2017-01-16 01:38:16,651 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] by.tc.eq.service.exception.ServiceException: Ошибка при получении отчета 
+2017-01-16 01:49:24,018 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] Error in the process of equipment report generating ! 
+2017-01-16 01:49:24,027 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] by.tc.eq.service.exception.ServiceException: Ошибка при получении отчета 
+2017-01-16 01:51:21,656 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] Error in the process of equipment report generating ! 
+2017-01-16 01:51:21,663 ERROR by.tc.eq.controller.command.impl.GenerateRentedEquipmentReport [main] by.tc.eq.service.exception.ServiceException: Ошибка при получении отчета 
+2017-01-16 13:01:47,627 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 13:01:47,637 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Введены некорректные данные: id_user: '0' , ids_equipment: [I@e320068 
+2017-01-16 13:03:47,629 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 13:03:47,635 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Введены некорректные данные: id_user: '0' , ids_equipment: [2, 0, 0] 
+2017-01-16 13:13:08,413 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 13:13:08,419 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Введены некорректные данные: id_user: '0' , ids_equipment: [2] 
+2017-01-16 13:14:01,003 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 13:14:01,011 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '1' , ids_equipment: [I@740fb309 
+2017-01-16 13:20:39,236 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 13:20:39,242 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '1' , ids_equipment: [2] 
+2017-01-16 13:22:43,833 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 13:22:43,844 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '1' , ids_equipment: [2] 
+2017-01-16 14:23:57,072 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 14:23:57,095 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '1' , ids_equipment: [2] 
+2017-01-16 14:31:45,341 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 14:31:45,347 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '1' , ids_equipment: [3] 
+2017-01-16 14:42:56,846 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 14:42:56,854 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '2' , ids_equipment: [2] 
+2017-01-16 15:02:00,213 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 15:02:00,222 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '3' , ids_equipment: [2] 
+2017-01-16 15:06:23,448 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] Error during equipment renting! 
+2017-01-16 15:06:23,457 ERROR by.tc.eq.controller.command.impl.RentEquipment [main] by.tc.eq.service.exception.ServiceException: Ошибка при попытке арендавать снаряжение:  id_user: '3' , ids_equipment: [2, 2, 2] 
+2017-01-17 00:21:08,731 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] null 
+2017-01-17 00:21:08,744 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] java.lang.StringIndexOutOfBoundsException: String index out of range: -1 
+2017-01-17 00:21:08,745 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] Wrong request 
+2017-01-17 00:21:08,746 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] java.lang.NullPointerException 
+2017-01-17 00:21:08,746 INFO by.tc.eq.controller.command.impl.WrongRequest [main] Wrong request: request 
+2017-01-17 00:21:54,510 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] null 
+2017-01-17 00:21:54,516 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] java.lang.StringIndexOutOfBoundsException: String index out of range: -1 
+2017-01-17 00:21:54,516 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] Wrong request 
+2017-01-17 00:21:54,516 ERROR by.tc.eq.controller.command.impl.AddEquipment [main] java.lang.NullPointerException 
+2017-01-17 00:21:54,517 INFO by.tc.eq.controller.command.impl.WrongRequest [main] Wrong request: SIGN_OUT 
