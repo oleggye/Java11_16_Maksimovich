@@ -89,7 +89,7 @@ public class ServiceInspector {
 
 	public static boolean isIdArrayCorrect(int[] id_array) {
 
-		if (id_array == null) {
+		if (id_array == null) {// code convention для кого писан????!!!!
 			return false;
 		}
 
