@@ -12,7 +12,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public void registeration(User user) throws ServiceException {
 
-		if (ServiceInspector.isUserObjectCorrect(user)) {
+		if (ServiceInspector.isUserObjectCorrect(user)) {// этот if правильнее написать наоборот
 
 			DAOFactory df = DAOFactory.getInstance();
 
