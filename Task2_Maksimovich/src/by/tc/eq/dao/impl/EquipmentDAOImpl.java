@@ -15,7 +15,8 @@ import by.tc.eq.dao.exeption.DAOException;
 
 public class EquipmentDAOImpl implements EquipmentDAO {
 
-	private static Connection con;
+	private static Connection con;// один коннекшн на все методы сразу, да еще и статический
+	// ты убил использование твоего кода в многопоточных приложениях на корню
 
 	// TODO: вынести в пул соединений
 	{
@@ -24,17 +25,20 @@ public class EquipmentDAOImpl implements EquipmentDAO {
 			con = (Connection) DriverManager.getConnection("jdbc:mysql://127.0.0.1/sportequipment", "test", "123");
 
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			e.printStackTrace();// а, фигли, что драйвер не загрузился
+			// мы тихонько затиаримся, и никому ничего не скажем
+			// а вось пронесет
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace();// убил №2
 		}
 	}
 
 	// TODO: убрать этот метод и реализовать пул соединений (не придумал, как
 	// сделать его общим)
 	@Override
-	protected void finalize() throws Throwable {
+	protected void finalize() throws Throwable {//1. модификация статического поля в нестатическом методе
+		//2. ЗАКРЫТИЕ КОННЕКШЕНА В БЛОКЕ FINALLY - ну чем ты думал
 		super.finalize();
 		if (con != null) {
 			con.close();
@@ -72,11 +76,12 @@ public class EquipmentDAOImpl implements EquipmentDAO {
 					if (prepStatement != null) {
 						prepStatement.close();
 					}
-				} catch (SQLException e) {
+				} catch (SQLException e) {// ты что пил????? ибо на трезвую голову такого написать нельзя!!!!
+					// это бред, нет это ПОЛНЫЙ БРЕД
 					if (exception != null) {
 
 						exception.addSuppressed(e);
-						throw exception;
+						throw exception;// блок finally не выбрасвает исключений, ну если только за ОООООЧЕНЬ редким исключением
 
 					} else {
 						throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
