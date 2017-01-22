@@ -1,6 +1,6 @@
 package by.tc.eq.dao.impl;
 
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,85 +12,64 @@ import by.tc.eq.bean.Status;
 import by.tc.eq.bean.User;
 import by.tc.eq.dao.UserDAO;
 import by.tc.eq.dao.exeption.DAOException;
-
-import com.mysql.jdbc.Connection;
+import by.tc.eq.dao.util.ConnectorDB;
 
 public class UserDAOImpl implements UserDAO {
-
-	private static Connection con;
-
-	// TODO: вынести в пул соединений
-	{
-
-		try {
-			Class.forName("org.gjt.mm.mysql.Driver");
-			con = (Connection) DriverManager.getConnection("jdbc:mysql://127.0.0.1/sportequipment", "test", "123");
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// TODO: убрать этот метод и реализовать пул соединений (не придумал, как
-	// сделать один пул на все приложение + его закрывать)
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		if (con != null) {
-			con.close();
-		}
-
-	}
 
 	@Override
 	public void addUser(User user) throws DAOException {
 
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
 
+			String sql = "INSERT INTO `sportequipment`.`user` (`name`, `surname`, `login`, `password`,"
+					+ "`discount`, `status`) VALUES (?, ?, ?, ?, ?, ?);";
+
+			prepStatement = connection.prepareStatement(sql);
+
+			// prepStatement.setInt(1, user.getId());
+			prepStatement.setString(1, user.getName());
+			prepStatement.setString(2, user.getSurname());
+			prepStatement.setString(3, user.getLogin());
+			prepStatement.setString(4, user.getPassword());
+			prepStatement.setFloat(5, user.getDiscount());
+			prepStatement.setString(6, user.getStatus().toString());
+
+			prepStatement.executeUpdate();
+
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-				String sql = "INSERT INTO `sportequipment`.`user` (`name`, `surname`, `login`, `password`,"
-						+ "`discount`, `status`) VALUES (?, ?, ?, ?, ?, ?);";
-
-				prepStatement = con.prepareStatement(sql);
-
-				// prepStatement.setInt(1, user.getId());
-				prepStatement.setString(1, user.getName());
-				prepStatement.setString(2, user.getSurname());
-				prepStatement.setString(3, user.getLogin());
-				prepStatement.setString(4, user.getPassword());
-				prepStatement.setFloat(5, user.getDiscount());
-				prepStatement.setString(6, user.getStatus().toString());
-
-				prepStatement.executeUpdate();
-
+				if (prepStatement != null) {
+					prepStatement.close();
+				}
 			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
+				if (exception != null) {
+
+					exception.addSuppressed(e);
+					throw exception;
+
+				} else {
+					throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
+				}
 			} finally {
 				try {
-					if (prepStatement != null) {
-						prepStatement.close();
+					if (connection != null) {
+						connection.close();
 					}
 				} catch (SQLException e) {
-					if (exception != null) {
-
-						exception.addSuppressed(e);
-						throw exception;
-
-					} else {
-						throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
-					}
+					// TODO:
 				}
 			}
-		} else {
-			throw new DAOException("DB connection error");
 		}
-
 	}
 
 	// FIXME: данный метод возвращает ОК, если даже по такому ID нет изначально
@@ -98,117 +77,152 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public void deleteUser(int id) throws DAOException {
 
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
 
+			String sql = "DELETE FROM `sportequipment`.`user` WHERE `id`=?;";
+			prepStatement = connection.prepareStatement(sql);
+
+			prepStatement.setInt(1, id);
+
+			prepStatement.executeUpdate();
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-				String sql = "DELETE FROM `sportequipment`.`user` WHERE `id`=?;";
-				prepStatement = con.prepareStatement(sql);
-
-				prepStatement.setInt(1, id);
-
-				prepStatement.executeUpdate();
+				if (prepStatement != null) {
+					prepStatement.close();
+				}
 			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
+				if (exception != null) {
+
+					exception.addSuppressed(e);
+					throw exception;
+
+				} else {
+					throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
+				}
 			} finally {
 				try {
-					if (prepStatement != null) {
-						prepStatement.close();
+					if (connection != null) {
+						connection.close();
 					}
 				} catch (SQLException e) {
-					if (exception != null) {
-
-						exception.addSuppressed(e);
-						throw exception;
-
-					} else {
-						throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
-					}
+					// TODO:
 				}
 			}
-		} else {
-			throw new DAOException("DB connection error");
 		}
-
 	}
 
 	@Override
 	public void updateUser(User user) throws DAOException {
 
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
 
+			String sql = "UPDATE `sportequipment`.`user` "
+					+ "SET `name`=?, `surname`=?, `discount`=?, `status`=? WHERE `id`=?;";
+
+			prepStatement = connection.prepareStatement(sql);
+
+			prepStatement.setString(1, user.getName());
+			prepStatement.setString(2, user.getSurname());
+			prepStatement.setFloat(3, user.getDiscount());
+			prepStatement.setString(4, user.getStatus().toString());
+			prepStatement.setInt(5, user.getId());
+
+			prepStatement.executeUpdate();
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-				String sql = "UPDATE `sportequipment`.`user` "
-						+ "SET `name`=?, `surname`=?, `discount`=?, `status`=? WHERE `id`=?;";
-
-				prepStatement = con.prepareStatement(sql);
-
-				prepStatement.setString(1, user.getName());
-				prepStatement.setString(2, user.getSurname());
-				prepStatement.setFloat(3, user.getDiscount());
-				prepStatement.setString(4, user.getStatus().toString());
-				prepStatement.setInt(5, user.getId());
-
-				prepStatement.executeUpdate();
+				if (prepStatement != null) {
+					prepStatement.close();
+				}
 			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
+				if (exception != null) {
+
+					exception.addSuppressed(e);
+					throw exception;
+
+				} else {
+					throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
+				}
 			} finally {
 				try {
-					if (prepStatement != null) {
-						prepStatement.close();
+					if (connection != null) {
+						connection.close();
 					}
 				} catch (SQLException e) {
-					if (exception != null) {
-
-						exception.addSuppressed(e);
-						throw exception;
-
-					} else {
-						throw exception = new DAOException("An error occurred during closing PreparedStatement", e);
-					}
+					// TODO:
 				}
 			}
-		} else {
-			throw new DAOException("DB connection error");
 		}
 	}
 
 	@Override
 	public int signInUser(String login, String password) throws DAOException {
 
+		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
+
+			statement = connection.createStatement();
+			String queryString = "select id from sportequipment.user where login = '" + login + "' and password ='"
+					+ password + "';";
+			resultSet = statement.executeQuery(queryString);
+
+			if (resultSet.next()) {
+
+				int id_user = resultSet.getInt(1);
+
+				return id_user;
+			} else {
+				throw exception = new DAOException("No entries!");
+			}
+
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-
-				statement = con.createStatement();
-				String queryString = "select id from sportequipment.user where login = '" + login + "' and password ='"
-						+ password + "';";
-				resultSet = statement.executeQuery(queryString);
-
-				if (resultSet.next()) {
-
-					int id_user = resultSet.getInt(1);
-
-					return id_user;
-				} else {
-					throw exception = new DAOException("No entries!");
+				if (resultSet != null) {
+					resultSet.close();
 				}
-
 			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
+				if (exception != null) {
+
+					exception.addSuppressed(e);
+					throw exception;
+
+				} else {
+					throw exception = new DAOException("An error occurred during closing ResultSet", e);
+				}
 			} finally {
 				try {
-					if (resultSet != null) {
-						resultSet.close();
+					if (statement != null) {
+						statement.close();
 					}
 				} catch (SQLException e) {
 					if (exception != null) {
@@ -217,28 +231,18 @@ public class UserDAOImpl implements UserDAO {
 						throw exception;
 
 					} else {
-						throw exception = new DAOException("An error occurred during closing ResultSet", e);
+						throw exception = new DAOException("An error occurred during closing Statement", e);
 					}
 				} finally {
 					try {
-						if (statement != null) {
-							statement.close();
+						if (connection != null) {
+							connection.close();
 						}
 					} catch (SQLException e) {
-						if (exception != null) {
-
-							exception.addSuppressed(e);
-							throw exception;
-
-						} else {
-							throw exception = new DAOException("An error occurred during closing Statement", e);
-						}
+						// TODO:
 					}
 				}
 			}
-
-		} else {
-			throw new DAOException("DB connection error");
 		}
 	}
 
@@ -246,36 +250,55 @@ public class UserDAOImpl implements UserDAO {
 	public User getUser(int id) throws DAOException {
 
 		User user = new User();
+		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
+
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from sportequipment.user where id = " + id + ";");
+
+			if (resultSet.next()) {
+
+				user.setId(resultSet.getInt(1));
+				user.setName(resultSet.getString(2));
+				user.setSurname(resultSet.getString(3));
+				user.setLogin(resultSet.getString(4));
+				user.setPassword(resultSet.getString(5));
+				user.setDiscount(resultSet.getFloat(6));
+				user.setStatus(Status.valueOf(resultSet.getString(7)));
+
+			} else {
+				throw new DAOException("Couldn't find user by id: '" + id + "'");
+			}
+
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-				statement = con.createStatement();
-				resultSet = statement.executeQuery("select * from sportequipment.user where id = " + id + ";");
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e) {
+				if (exception != null) {
 
-				if (resultSet.next()) {
-
-					user.setId(resultSet.getInt(1));
-					user.setName(resultSet.getString(2));
-					user.setSurname(resultSet.getString(3));
-					user.setLogin(resultSet.getString(4));
-					user.setPassword(resultSet.getString(5));
-					user.setDiscount(resultSet.getFloat(6));
-					user.setStatus(Status.valueOf(resultSet.getString(7)));
+					exception.addSuppressed(e);
+					throw exception;
 
 				} else {
-					throw new DAOException("Couldn't find user by id: '" + id + "'");
+					throw exception = new DAOException("An error occurred during closing ResultSet", e);
 				}
-
-			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
 			} finally {
 				try {
-					if (resultSet != null) {
-						resultSet.close();
+					if (statement != null) {
+						statement.close();
 					}
 				} catch (SQLException e) {
 					if (exception != null) {
@@ -284,29 +307,19 @@ public class UserDAOImpl implements UserDAO {
 						throw exception;
 
 					} else {
-						throw exception = new DAOException("An error occurred during closing ResultSet", e);
+						throw exception = new DAOException("An error occurred during closing Statement", e);
 					}
 				} finally {
 					try {
-						if (statement != null) {
-							statement.close();
+						if (connection != null) {
+							connection.close();
 						}
 					} catch (SQLException e) {
-						if (exception != null) {
-
-							exception.addSuppressed(e);
-							throw exception;
-
-						} else {
-							throw exception = new DAOException("An error occurred during closing Statement", e);
-						}
+						// TODO:
 					}
 				}
 			}
-		} else {
-			throw new DAOException("DB connection error");
 		}
-
 		return user;
 	}
 
@@ -314,36 +327,55 @@ public class UserDAOImpl implements UserDAO {
 	public List<User> getAllUsers() throws DAOException {
 
 		List<User> userslist = new ArrayList<>();
+		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
+
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from sportequipment.user;");
+
+			while (resultSet.next()) {
+				User user = new User();
+
+				user.setId(resultSet.getInt(1));
+				user.setName(resultSet.getString(2));
+				user.setSurname(resultSet.getString(3));
+				user.setLogin(resultSet.getString(4));
+				user.setPassword(resultSet.getString(5));
+				user.setDiscount(resultSet.getFloat(6));
+				user.setStatus(Status.valueOf(resultSet.getString(7)));
+
+				userslist.add(user);
+			}
+
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-				statement = con.createStatement();
-				resultSet = statement.executeQuery("select * from sportequipment.user;");
-
-				while (resultSet.next()) {
-					User user = new User();
-
-					user.setId(resultSet.getInt(1));
-					user.setName(resultSet.getString(2));
-					user.setSurname(resultSet.getString(3));
-					user.setLogin(resultSet.getString(4));
-					user.setPassword(resultSet.getString(5));
-					user.setDiscount(resultSet.getFloat(6));
-					user.setStatus(Status.valueOf(resultSet.getString(7)));
-
-					userslist.add(user);
+				if (resultSet != null) {
+					resultSet.close();
 				}
-
 			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
+				if (exception != null) {
+
+					exception.addSuppressed(e);
+					throw exception;
+
+				} else {
+					throw exception = new DAOException("An error occurred during closing ResultSet", e);
+				}
 			} finally {
 				try {
-					if (resultSet != null) {
-						resultSet.close();
+					if (statement != null) {
+						statement.close();
 					}
 				} catch (SQLException e) {
 					if (exception != null) {
@@ -352,27 +384,18 @@ public class UserDAOImpl implements UserDAO {
 						throw exception;
 
 					} else {
-						throw exception = new DAOException("An error occurred during closing ResultSet", e);
+						throw exception = new DAOException("An error occurred during closing Statement", e);
 					}
 				} finally {
 					try {
-						if (statement != null) {
-							statement.close();
+						if (connection != null) {
+							connection.close();
 						}
 					} catch (SQLException e) {
-						if (exception != null) {
-
-							exception.addSuppressed(e);
-							throw exception;
-
-						} else {
-							throw exception = new DAOException("An error occurred during closing Statement", e);
-						}
+						// TODO:
 					}
 				}
 			}
-		} else {
-			throw new DAOException("DB connection error");
 		}
 		return userslist;
 	}
@@ -380,36 +403,55 @@ public class UserDAOImpl implements UserDAO {
 	public List<User> getAllDebtors() throws DAOException {
 
 		List<User> usersList = new ArrayList<>();
+		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 
 		DAOException exception = null;
 
-		if (con != null) {
+		try {
+			connection = ConnectorDB.getConnection();
+
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from sportequipment.user where status = \'Debtor\';");
+
+			while (resultSet.next()) {
+				User user = new User();
+
+				user.setId(resultSet.getInt(1));
+				user.setName(resultSet.getString(2));
+				user.setSurname(resultSet.getString(3));
+				user.setLogin(resultSet.getString(4));
+				user.setPassword(resultSet.getString(5));
+				user.setDiscount(resultSet.getFloat(6));
+				user.setStatus(Status.valueOf(resultSet.getString(7)));
+
+				usersList.add(user);
+			}
+
+		} catch (ClassNotFoundException e) {
+			throw new DAOException("Can't initialize driver");
+
+		} catch (SQLException e) {
+			throw exception = new DAOException("An error occurred during execution", e);
+		} finally {
 			try {
-				statement = con.createStatement();
-				resultSet = statement.executeQuery("select * from sportequipment.user where status = \'Debtor\';");
-
-				while (resultSet.next()) {
-					User user = new User();
-
-					user.setId(resultSet.getInt(1));
-					user.setName(resultSet.getString(2));
-					user.setSurname(resultSet.getString(3));
-					user.setLogin(resultSet.getString(4));
-					user.setPassword(resultSet.getString(5));
-					user.setDiscount(resultSet.getFloat(6));
-					user.setStatus(Status.valueOf(resultSet.getString(7)));
-
-					usersList.add(user);
+				if (resultSet != null) {
+					resultSet.close();
 				}
-
 			} catch (SQLException e) {
-				throw exception = new DAOException("An error occurred during execution", e);
+				if (exception != null) {
+
+					exception.addSuppressed(e);
+					throw exception;
+
+				} else {
+					throw exception = new DAOException("An error occurred during closing ResultSet", e);
+				}
 			} finally {
 				try {
-					if (resultSet != null) {
-						resultSet.close();
+					if (statement != null) {
+						statement.close();
 					}
 				} catch (SQLException e) {
 					if (exception != null) {
@@ -418,27 +460,18 @@ public class UserDAOImpl implements UserDAO {
 						throw exception;
 
 					} else {
-						throw exception = new DAOException("An error occurred during closing ResultSet", e);
+						throw exception = new DAOException("An error occurred during closing Statement", e);
 					}
 				} finally {
 					try {
-						if (statement != null) {
-							statement.close();
+						if (connection != null) {
+							connection.close();
 						}
 					} catch (SQLException e) {
-						if (exception != null) {
-
-							exception.addSuppressed(e);
-							throw exception;
-
-						} else {
-							throw exception = new DAOException("An error occurred during closing Statement", e);
-						}
+						// TODO:
 					}
 				}
 			}
-		} else {
-			throw new DAOException("DB connection error");
 		}
 		return usersList;
 	}

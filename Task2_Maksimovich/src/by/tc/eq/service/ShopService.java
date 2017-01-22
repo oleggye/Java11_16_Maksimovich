@@ -24,13 +24,13 @@ public interface ShopService {
 
 	void updateEquipment(Equipment equipment) throws ServiceException;
 
-	void deleteEquipment(int id_equipment) throws ServiceException;
+	void deleteEquipment(int equipmentId) throws ServiceException;
 
-	Equipment getEquipmentInfo(int id_equipment) throws ServiceException;
+	Equipment getEquipmentInfo(int equipmentId) throws ServiceException;
 
 	// Rent
 
-	void rentEquipment(int id_user, int[] ids_equipment) throws ServiceException;
+	void rentEquipment(int userId, int[] equipmentIds) throws ServiceException;
 
-	void returnEquipment(int id_user, int[] ids_equipment) throws ServiceException;
+	void returnEquipment(int userId, int[] equipmentIds) throws ServiceException;
 }

@@ -37,7 +37,6 @@ public class GenerateOwerReport implements Command {
 			response = "Error in the process of ower report generating !";
 			logger.error(response);
 			logger.log(Level.ERROR, e);
-			return response;
 		}
 
 		return response;

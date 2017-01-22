@@ -5,24 +5,24 @@ import by.tc.eq.bean.User;
 
 public class ServiceInspector {
 
-	public static boolean isLoginAndPasswordCorrect(String login, String password) {
+	public static boolean isLoginAndPasswordIncorrect(String login, String password) {
 
-		if (!isDataStringCorrect(login) || !isDataStringCorrect(password)) {
-			return false;
-		} else {
+		if (isDataStringIncorrect(login) || isDataStringIncorrect(password)) {
 			return true;
+		} else {
+			return false;
 		}
 
 	}
 
-	public static boolean isUserObjectCorrect(User user) {
+	public static boolean isUserObjectIncorrect(User user) {
 
 		if (user == null) {
-			return false;
+			return true;
 		}
 
-		if (!isDataStringCorrect(user.getName()) || !isDataStringCorrect(user.getSurname())) {
-			return false;
+		if (isDataStringIncorrect(user.getName()) || isDataStringIncorrect(user.getSurname())) {
+			return true;
 		}
 
 		/**
@@ -31,7 +31,7 @@ public class ServiceInspector {
 		 */
 
 		if (user.getDiscount() < 0 || user.getDiscount() > 1) {
-			return false;
+			return true;
 		}
 
 		/**
@@ -39,81 +39,77 @@ public class ServiceInspector {
 		 * можно утверждать, что ссылка указывает на объект
 		 */
 		if (user.getStatus() == null)
-			return false;
+			return true;
 
-		return true;
+		return false;
 	}
 
-	/*public static boolean isGoodObjectCorrect(Good good) {
+	/*
+	 * public static boolean isGoodObjectCorrect(Good good) {
+	 * 
+	 * if (good == null) { return false; }
+	 * 
+	 * if (good.getId() < 0 || !isDataStringCorrect(good.getTitle())) return
+	 * false; else { return true; } }
+	 */
 
-		if (good == null) {
-			return false;
-		}
-
-		if (good.getId() < 0 || !isDataStringCorrect(good.getTitle()))
-			return false;
-		else {
-			return true;
-		}
-	}*/
-
-	public static boolean isEquipmentObjectCorrect(Equipment equipment) {
+	public static boolean isEquipmentObjectIncorrect(Equipment equipment) {
 
 		if (equipment == null) {
-			return false;
+			return true;
 		}
 
-		if (!isDataStringCorrect(equipment.getTitle())) {
-			return false;
+		if (isDataStringIncorrect(equipment.getTitle())) {
+			return true;
 		}
 
-		if (!isDataStringCorrect(equipment.getDescription())) {
-			return false;
+		if (isDataStringIncorrect(equipment.getDescription())) {
+			return true;
 		}
 
 		// предполагается, что номера категорий будут начинаться с 1
 		if (equipment.getCategory_id() < 1) {
-			return false;
+			return true;
 		}
 
 		if (equipment.getPrice() < 0) {
-			return false;
+			return true;
 		}
 
 		if (equipment.getQuantity() < 0) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
-	public static boolean isIdArrayCorrect(int[] id_array) {
+	public static boolean isIdArrayIncorrect(int[] arrayOfId) {
 
-		if (id_array == null) {
-			return false;
+		if (arrayOfId == null) {
+			return true;
 		}
 
-		if (id_array.length == 0) {
-			return false;
+		if (arrayOfId.length == 0) {
+			return true;
 		}
 
-		for (int elem : id_array) {
+		for (int elem : arrayOfId) {
 
 			if (elem <= 0) {
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
-	private static boolean isDataStringCorrect(String data) {
+	private static boolean isDataStringIncorrect(String data) {
 
 		if (data == null) {
-			return false;
+			return true;
 		}
 
 		if (data.isEmpty()) {
-			return false;
+			return true;
 		}
 		/**
 		 * возможна такая ситуация, что строка состоит или содержит символы
@@ -122,10 +118,10 @@ public class ServiceInspector {
 		int dataLength = data.length();
 
 		if (data.trim().length() != dataLength) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 }

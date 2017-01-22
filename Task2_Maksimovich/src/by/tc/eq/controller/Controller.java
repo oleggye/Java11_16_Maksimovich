@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.tc.eq.controller.command.Command;
 import by.tc.eq.controller.command.impl.AddEquipment;
+import by.tc.eq.controller.util.RequestParser;
 
 public final class Controller {
 
@@ -22,19 +23,16 @@ public final class Controller {
 
 		try {
 
-			commandName = request.substring(0, request.indexOf(Command.PARAM_DELIMETER));
+			commandName = RequestParser.getCommandNameFromRequest(request);
 			executionCommand = provider.getCommand(commandName);
+			response = executionCommand.execute(request);
 
 		} catch (IndexOutOfBoundsException e) {
-
 			logger.error(response);
 			logger.log(Level.ERROR, e);
 
-		} finally {
-			executionCommand = provider.getCommand(commandName);
-			response = executionCommand.execute(request);
+			response = "Wrong request";
 		}
 		return response;
 	}
-
 }

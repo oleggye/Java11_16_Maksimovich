@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import by.tc.eq.bean.Status;
 import by.tc.eq.bean.User;
 import by.tc.eq.controller.command.Command;
+import by.tc.eq.controller.util.RequestParser;
 import by.tc.eq.service.ClientService;
 import by.tc.eq.service.exception.ServiceException;
 import by.tc.eq.service.factory.ServiceFactory;
@@ -27,7 +28,7 @@ public class UpdateUserData implements Command {
 
 		String response = null;
 
-		String[] params = request.split(Command.PARAM_DELIMETER);
+		String[] params = RequestParser.getAllParamsFromRequest(request);
 
 		if (params.length == EXPECTED_QUANTITY_OF_PARAMETERS) {
 
@@ -78,7 +79,6 @@ public class UpdateUserData implements Command {
 				response = "Error during updating!";
 				logger.error(response);
 				logger.log(Level.ERROR, e);
-				return response;
 			}
 		} else {
 			response = "Incorrect user's parameters";

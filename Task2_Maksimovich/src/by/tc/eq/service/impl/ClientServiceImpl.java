@@ -12,7 +12,11 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public void registeration(User user) throws ServiceException {
 
-		if (ServiceInspector.isUserObjectCorrect(user)) {
+		if (ServiceInspector.isUserObjectIncorrect(user)) {
+
+			throw new ServiceException("Введены некорректные данные пользователя: " + user);
+
+		} else {
 
 			DAOFactory df = DAOFactory.getInstance();
 
@@ -23,16 +27,17 @@ public class ClientServiceImpl implements ClientService {
 			} catch (DAOException e) {
 				throw new ServiceException("Ошибка при добавлении нового пользователя: " + user, e);
 			}
-
-		} else {
-			throw new ServiceException("Введены некорректные данные пользователя: " + user);
 		}
 	}
 
 	@Override
 	public int singIn(String login, String password) throws ServiceException {
 
-		if (ServiceInspector.isLoginAndPasswordCorrect(login, password)) {
+		if (ServiceInspector.isLoginAndPasswordIncorrect(login, password)) {
+
+			throw new ServiceException("Введены некорректные данные авторизации: login: " + "'" + login
+					+ "', password: '" + password + "'");
+		} else {
 
 			DAOFactory df = DAOFactory.getInstance();
 
@@ -43,10 +48,6 @@ public class ClientServiceImpl implements ClientService {
 			} catch (DAOException e) {
 				throw new ServiceException("No such user", e);
 			}
-
-		} else {
-			throw new ServiceException("Введены некорректные данные авторизации: login: " + "'" + login
-					+ "', password: '" + password + "'");
 		}
 	}
 
@@ -64,7 +65,10 @@ public class ClientServiceImpl implements ClientService {
 		 * user.
 		 */
 
-		if (ServiceInspector.isUserObjectCorrect(user) && user.getId() > 0) {
+		if (ServiceInspector.isUserObjectIncorrect(user) && user.getId() < 0) {
+			throw new ServiceException("Введены некорректные данные пользователя: " + user);
+
+		} else {
 
 			DAOFactory df = DAOFactory.getInstance();
 
@@ -74,50 +78,40 @@ public class ClientServiceImpl implements ClientService {
 
 			} catch (DAOException e) {
 				throw new ServiceException("Ошибка при обновлении данных пользователя: " + user, e);
-
 			}
-		} else {
-			throw new ServiceException("Введены некорректные данные пользователя: " + user);
 		}
-
 	}
 
 	@Override
-	public void deleteUser(int user_id) throws ServiceException {
+	public void deleteUser(int userId) throws ServiceException {
 
-		if (user_id > 0) {
-
+		if (userId < 0) {
+			throw new ServiceException("Введены некорректные данные пользователя: user_id: '" + userId + "'");
+		} else {
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
-				df.getUserDAO().deleteUser(user_id);
+				df.getUserDAO().deleteUser(userId);
 			} catch (DAOException e) {
-				throw new ServiceException("Ошибка при удалении пользователя: user_id: '" + user_id + "'", e);
+				throw new ServiceException("Ошибка при удалении пользователя: user_id: '" + userId + "'", e);
 			}
-		} else {
-			// TODO: возможно, нужно выбрать другое сообщение
-			throw new ServiceException("Введены некорректные данные пользователя: user_id: '" + user_id + "'");
 		}
-
 	}
 
 	@Override
-	public User getUserInfo(int user_id) throws ServiceException {
+	public User getUserInfo(int userId) throws ServiceException {
 
-		if (user_id > 0) {
-
+		if (userId < 0) {
+			throw new ServiceException("Введены некорректные данные пользователя: user_id: '" + userId + "'");
+		} else {
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
-				return df.getUserDAO().getUser(user_id);
+				return df.getUserDAO().getUser(userId);
 			} catch (DAOException e) {
 				throw new ServiceException(
-						"Ошибка при попытке получить информацию о пользователе: user_id: '" + user_id + "'", e);
+						"Ошибка при попытке получить информацию о пользователе: user_id: '" + userId + "'", e);
 			}
-		} else {
-			// TODO: возможно, нужно выбрать другое сообщение
-			throw new ServiceException("Введены некорректные данные пользователя: user_id: '" + user_id + "'");
 		}
-
 	}
 }

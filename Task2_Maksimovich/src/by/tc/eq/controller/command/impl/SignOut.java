@@ -27,10 +27,8 @@ public class SignOut implements Command {
 
 		} catch (ServiceException e) {
 			response = "Error during logout procedure!";
-
 			logger.error(response);
 			logger.log(Level.ERROR, e);
-			return response;
 		}
 
 		return response;

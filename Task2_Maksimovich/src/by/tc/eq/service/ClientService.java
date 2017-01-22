@@ -13,8 +13,8 @@ public interface ClientService {
 
 	void updateUserData(User user) throws ServiceException;
 
-	void deleteUser(int id) throws ServiceException;
+	void deleteUser(int userId) throws ServiceException;
 
-	User getUserInfo(int id) throws ServiceException;
+	User getUserInfo(int userId) throws ServiceException;
 
 }

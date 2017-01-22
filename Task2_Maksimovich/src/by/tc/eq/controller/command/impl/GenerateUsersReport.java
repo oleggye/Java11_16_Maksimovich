@@ -37,7 +37,6 @@ public class GenerateUsersReport implements Command {
 			response = "Error in the process of user report generating !";
 			logger.error(response);
 			logger.log(Level.ERROR, e);
-			return response;
 		}
 
 		return response;

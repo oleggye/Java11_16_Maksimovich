@@ -63,6 +63,7 @@ public class ShopServiceImpl implements ShopService {
 
 	@Override
 	public List<Equipment> getRentedEquipmentReport() throws ServiceException {
+
 		DAOFactory df = DAOFactory.getInstance();
 
 		try {
@@ -79,7 +80,11 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public void addEquipment(Equipment equipment) throws ServiceException {
 
-		if (ServiceInspector.isEquipmentObjectCorrect(equipment)) {
+		if (ServiceInspector.isEquipmentObjectIncorrect(equipment)) {
+
+			throw new ServiceException("Введены некорректные данные о снаряжении: " + equipment);
+
+		} else {
 
 			DAOFactory df = DAOFactory.getInstance();
 
@@ -90,10 +95,8 @@ public class ShopServiceImpl implements ShopService {
 			} catch (DAOException e) {
 				throw new ServiceException("Ошибка при добавлении снаряжениия: " + equipment, e);
 			}
-
-		} else {
-			throw new ServiceException("Введены некорректные данные о снаряжении: " + equipment);
 		}
+
 	}
 
 	@Override
@@ -105,8 +108,11 @@ public class ShopServiceImpl implements ShopService {
 		 * проверить на предварительную корректность поле id объекта equipment.
 		 */
 
-		if (ServiceInspector.isEquipmentObjectCorrect(equipment) && equipment.getId() > 0) {
+		if (ServiceInspector.isEquipmentObjectIncorrect(equipment) && equipment.getId() < 0) {
 
+			throw new ServiceException("Введены некорректные данные о снаряжении: " + equipment);
+
+		} else {
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
@@ -115,98 +121,94 @@ public class ShopServiceImpl implements ShopService {
 
 			} catch (DAOException e) {
 				throw new ServiceException("Ошибка при обновлении данных о снаряжении: " + equipment, e);
-
 			}
-		} else {
-			throw new ServiceException("Введены некорректные данные о снаряжении: " + equipment);
 		}
 	}
 
 	@Override
-	public void deleteEquipment(int equipment_id) throws ServiceException {
+	public void deleteEquipment(int equipmentId) throws ServiceException {
 
-		if (equipment_id > 0) {
+		if (equipmentId < 0) {
+
+			throw new ServiceException("Введены некорректные данные о снаряжении: equipment_id :" + equipmentId + "'");
+
+		} else {
 
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
-				df.getEquipmentsDAO().deleteEquipment(equipment_id);
+				df.getEquipmentsDAO().deleteEquipment(equipmentId);
 
 			} catch (DAOException e) {
-				throw new ServiceException("Ошибка при удалении снаряжения: equipment_id : '" + equipment_id + "'", e);
+				throw new ServiceException("Ошибка при удалении снаряжения: equipment_id : '" + equipmentId + "'", e);
 			}
-		} else {
-			throw new ServiceException("Введены некорректные данные о снаряжении: equipment_id :" + equipment_id + "'");
 		}
+
 	}
 
 	@Override
-	public Equipment getEquipmentInfo(int equipment_id) throws ServiceException {
+	public Equipment getEquipmentInfo(int equipmentId) throws ServiceException {
 
-		if (equipment_id > 0) {
+		if (equipmentId < 0) {
+
+			throw new ServiceException("Введены некорректные данные о снаряжении: " + equipmentId + "'");
+
+		} else {
 
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
 
-				return df.getEquipmentsDAO().getEquipment(equipment_id);
+				return df.getEquipmentsDAO().getEquipment(equipmentId);
 
 			} catch (DAOException e) {
 				throw new ServiceException(
-						"Ошибка при попытке получить информацию о снаряжении: equipment_id : '" + equipment_id + "'",
+						"Ошибка при попытке получить информацию о снаряжении: equipment_id : '" + equipmentId + "'",
 						e);
 			}
-		} else {
-			// TODO: возможно, нужно выбрать другое сообщение
-			throw new ServiceException("Введены некорректные данные о снаряжении: " + equipment_id + "'");
-
 		}
 	}
 
 	@Override
-	public void rentEquipment(int id_user, int[] ids_equipment) throws ServiceException {
+	public void rentEquipment(int userId, int[] equipmentIds) throws ServiceException {
 
-		if (id_user > 0 && ServiceInspector.isIdArrayCorrect((ids_equipment))) {
+		if (userId < 0 || ServiceInspector.isIdArrayIncorrect((equipmentIds))) {
 
+			throw new ServiceException("Введены некорректные данные: id_user: '" + userId + "' , ids_equipment: "
+					+ Arrays.toString((equipmentIds)));
+		} else {
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
 
-				df.getRentDAO().rentEquipment(id_user, ids_equipment);
+				df.getRentDAO().rentEquipment(userId, equipmentIds);
 
 			} catch (DAOException e) {
-				throw new ServiceException("Ошибка при попытке арендавать снаряжение:  id_user: '" + id_user
-						+ "' , ids_equipment: " + Arrays.toString(ids_equipment), e);
+				throw new ServiceException("Ошибка при попытке арендавать снаряжение:  id_user: '" + userId
+						+ "' , ids_equipment: " + Arrays.toString(equipmentIds), e);
 			}
-
-		} else {
-			throw new ServiceException("Введены некорректные данные: id_user: '" + id_user + "' , ids_equipment: "
-					+ Arrays.toString((ids_equipment)));
 		}
-
 	}
 
 	@Override
-	public void returnEquipment(int id_user, int[] ids_equipment) throws ServiceException {
+	public void returnEquipment(int userId, int[] equipmentIds) throws ServiceException {
 
-		if (id_user > 0 && ServiceInspector.isIdArrayCorrect((ids_equipment))) {
+		if (userId < 0 || ServiceInspector.isIdArrayIncorrect((equipmentIds))) {
 
+			throw new ServiceException("Введены некорректные данные: id_user: '" + userId + "' , ids_equipment: "
+					+ Arrays.toString((equipmentIds)));
+
+		} else {
 			DAOFactory df = DAOFactory.getInstance();
 
 			try {
 
-				df.getRentDAO().returnEquipment(id_user, ids_equipment);
+				df.getRentDAO().returnEquipment(userId, equipmentIds);
 
 			} catch (DAOException e) {
-				throw new ServiceException("Ошибка при попытке вернуть снаряжение:  id_user: '" + id_user
-						+ "' , ids_equipment: " + Arrays.toString(ids_equipment), e);
+				throw new ServiceException("Ошибка при попытке вернуть снаряжение:  id_user: '" + userId
+						+ "' , ids_equipment: " + Arrays.toString(equipmentIds), e);
 			}
-
-		} else {
-			throw new ServiceException("Введены некорректные данные: id_user: '" + id_user + "' , ids_equipment: "
-					+ Arrays.toString((ids_equipment)));
 		}
-
 	}
-
 }
