@@ -2,7 +2,7 @@ package by.tc.eq.controller;
 
 import by.tc.eq.view.Viewer;
 
-public class Main {
+public class Main {// точку запуска оформляют отдельным пакетом
 
 	private static Controller controller = new Controller();
 

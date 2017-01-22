@@ -26,7 +26,8 @@ public class AddUser implements Command {
 
 		String response = null;
 
-		String[] params = request.split(Command.PARAM_DELIMETER);
+		String[] params = request.split(Command.PARAM_DELIMETER);// для 'побочных' действий лучше либо писать отдельные методы, или даже классы
+		// иначе загромоздишь код мало того, что повторяющимся кодом, так еще и сделаешь его малочитаемым
 
 		if (params.length == EXPECTED_QUANTITY_OF_PARAMETERS) {
 
@@ -53,7 +54,7 @@ public class AddUser implements Command {
 				response = "Error during registration!";
 				logger.error(response);
 				logger.log(Level.ERROR, e);
-				return response;
+				return response;// в catch-ах return не используют, плохой стиль
 
 			}
 		} else {

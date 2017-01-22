@@ -22,7 +22,8 @@ public final class Controller {
 
 		try {
 
-			commandName = request.substring(0, request.indexOf(Command.PARAM_DELIMETER));
+			commandName = request.substring(0, request.indexOf(Command.PARAM_DELIMETER));// такое лучше оформлять отдельным утилитным методо или даже классом с вменяемым названием
+			// я про правую часть оператора
 			executionCommand = provider.getCommand(commandName);
 
 		} catch (IndexOutOfBoundsException e) {
@@ -31,10 +32,10 @@ public final class Controller {
 			logger.log(Level.ERROR, e);
 
 		} finally {
-			executionCommand = provider.getCommand(commandName);
-			response = executionCommand.execute(request);
+			executionCommand = provider.getCommand(commandName);// а зачем ты повторяешь строчку 27?
+			response = executionCommand.execute(request);// execute в блоке finally - это конечно креативно, но неправильно
 		}
-		return response;
+		return response;// пользователю по твоей логике можно вернуть null
 	}
 
 }
