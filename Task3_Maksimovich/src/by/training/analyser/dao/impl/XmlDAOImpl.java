@@ -28,12 +28,10 @@ public class XmlDAOImpl implements XmlDAO {
 
 	@Override
 	public String next() throws DAOException {
-		
-		if(buffReader == null){
+
+		if (buffReader == null) {
 			throw new DAOException("XmlDAO isn't initialized");
 		}
-
-		DAOException exception = null;
 
 		String nextLine = null;
 
@@ -43,12 +41,10 @@ public class XmlDAOImpl implements XmlDAO {
 			nextLine = buffReader.readLine();
 
 		} catch (FileNotFoundException e) {
-			exception = new DAOException("File: '" + filePath + "' doesn't exist", e);
-			throw exception;
+			throw new DAOException("File: '" + filePath + "' doesn't exist", e);
 
 		} catch (IOException e) {
-			exception = new DAOException("Can't read from file: '" + filePath + "'", e);
-			throw exception;
+			throw new DAOException("Can't read from file: '" + filePath + "'", e);
 		}
 
 		return nextLine;
