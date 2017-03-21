@@ -1,0 +1,9 @@
+#date-td, #sport-td, #home-team-td , #away-team-td, #tournament-td, #country-td{
+  width: auto;
+}
+
+ #addCompetitionBtn {
+ 	width: 7vw;
+ 	position: relative;
+ 	left: 91%;
+ }
