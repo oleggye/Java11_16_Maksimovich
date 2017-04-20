@@ -1,0 +1,12 @@
+.req-symbol {
+  color: red;
+  font-size: 1.4em;
+}
+
+#optional {
+  display: none;
+}
+
+#optional-email-span {
+  display: inline-block;
+}
