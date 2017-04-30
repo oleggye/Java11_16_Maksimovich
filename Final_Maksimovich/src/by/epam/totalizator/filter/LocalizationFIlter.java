@@ -20,10 +20,6 @@ import by.epam.totalizator.controller.util.ParamNameStore;
  */
 public class LocalizationFIlter implements Filter {
 
-	private Locale defaultLocale;
-
-	private static final String PARAM_NAME_DEFAULT_LOCALE = "defaultLocale";
-
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
@@ -34,15 +30,17 @@ public class LocalizationFIlter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
 		HttpSession session = httpRequest.getSession(true);
-		Object userLocaleParam = session.getAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL);
+		Object userSessionLocaleParam = 
+				session.getAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL);
 
-		if (userLocaleParam == null) {
-			session.setAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL, defaultLocale);
+		if (userSessionLocaleParam == null) {
+			Locale userLocale = getSuitableLocalization(request.getLocale());
+			session.setAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL, userLocale);
 		}
 
-		String requestLocalParam = request.getParameter(ParamNameStore.PARAM_NAME_LOCAL);
-		if (requestLocalParam != null) {
-			Locale locale = new Locale(requestLocalParam);
+		String requestLocaleParam = request.getParameter(ParamNameStore.PARAM_NAME_LOCAL);
+		if (requestLocaleParam != null) {
+			Locale locale = new Locale(requestLocaleParam);
 			session.setAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL, locale);
 		}
 
@@ -50,11 +48,32 @@ public class LocalizationFIlter implements Filter {
 	}
 
 	/**
+	 * Method checks whether the localization is in the set of allowable values
+	 * 
+	 * if isn't than returns #Locale.US value
+	 * else returns the passed localization
+	 * 
+	 * @param locale
+	 *            testable localization
+	 * @return suitable locale for the app
+	 */
+
+	private Locale getSuitableLocalization(Locale locale) {
+
+		String localeLanguage = locale.getLanguage();
+		if (locale == null 
+				|| !localeLanguage.equals(Locale.US.getLanguage()) 
+				|| !localeLanguage.equalsIgnoreCase("ru")) {
+			locale = Locale.US;
+		}
+		return locale;
+	}
+
+	/**
 	 * @see Filter#init(FilterConfig)
 	 */
 	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
-		defaultLocale = new Locale(fConfig.getInitParameter(PARAM_NAME_DEFAULT_LOCALE));
 	}
 
 	/**
@@ -62,6 +81,5 @@ public class LocalizationFIlter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		defaultLocale = null;
 	}
 }

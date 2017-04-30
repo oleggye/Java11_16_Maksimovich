@@ -29,9 +29,9 @@ public class EncodingFilter implements Filter {
 		if (encoding != null && !encoding.equalsIgnoreCase(requestEncoding)) {
 			request.setCharacterEncoding(encoding);
 		}
-		response.setCharacterEncoding(encoding);
 
 		chain.doFilter(request, response);
+		response.setCharacterEncoding(encoding);
 	}
 
 	/**
