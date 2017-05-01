@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -64,20 +65,16 @@ public class UserDAOImpl implements IUserDAO {
 
 				prepStatement.setString(1, login);
 				prepStatement.setString(2, password);
-				
+
 				try (ResultSet resultSet = prepStatement.executeQuery()) {
 
 					if (resultSet.next()) {
 
-						user = new UserBuilder()
-								.buildId(resultSet.getInt(1))
+						user = new UserBuilder().buildId(resultSet.getInt(1))
 								.buildUserType(UserType.getTypeByShortName(resultSet.getString(2)))
-								.buildBalance(resultSet.getBigDecimal(3))
-								.buildCurrency(resultSet.getString(4))
-								.buildLocale(new Locale(resultSet.getString(5)))
-								.buildEmail(login)
-								.buildBanned(resultSet.getBoolean(6))
-								.build();
+								.buildBalance(resultSet.getBigDecimal(3)).buildCurrency(resultSet.getString(4))
+								.buildLocale(new Locale(resultSet.getString(5))).buildEmail(login)
+								.buildBanned(resultSet.getBoolean(6)).build();
 					}
 				}
 			}
@@ -110,7 +107,8 @@ public class UserDAOImpl implements IUserDAO {
 
 		try (Connection connection = connectionPool.getConnection()) {
 			try (PreparedStatement prepareStatement = connection
-					.prepareStatement(SQLProvider.getInstance().getSql(sqlName))) {
+					.prepareStatement(SQLProvider.getInstance().getSql(sqlName)
+							,Statement.RETURN_GENERATED_KEYS)) {
 
 				connection.setAutoCommit(false);
 
@@ -125,12 +123,19 @@ public class UserDAOImpl implements IUserDAO {
 				prepareStatement.setString(9, user.getCurrency());
 				prepareStatement.setString(10, user.getLocale().toString());
 
-				prepareStatement.execute();
+				if (prepareStatement.executeUpdate() > 0) {
 
-				int idUser = getNewUserId(connection);
-				user.setId(idUser);
+					int idUser = 0;
+					try (ResultSet generatedKeys = prepareStatement.getGeneratedKeys()) {
+						if (generatedKeys.next()) {
+							idUser = generatedKeys.getInt(1);
+						}
+					}
+					// idUser = getNewUserId(connection);
+					user.setId(idUser);
 
-				addPrivateUserData(user, connection);
+					addPrivateUserData(user, connection);
+				}
 
 				connection.commit();
 				connection.setAutoCommit(true);
@@ -149,34 +154,6 @@ public class UserDAOImpl implements IUserDAO {
 			LOGGER.log(Level.ERROR, e);
 			throw new DAOException(CONNECTION_POOL_EXCEPTION_MESSAGE, e);
 		}
-	}
-
-	/**
-	 * Method gets last inserted id of a user entity from the db
-	 * 
-	 * @param connection
-	 *            db connection
-	 * @return last inserted id
-	 * @throws SQLException
-	 *             an exception from jdbc
-	 */
-	private int getNewUserId(Connection connection) throws SQLException {
-
-		int idNewUser = 0;
-
-		SQLName sqlName = SQLName.GET_LAST_INSERTED_ID;
-
-		try (PreparedStatement prepareStatement = connection
-				.prepareStatement(SQLProvider.getInstance().getSql(sqlName))) {
-
-			try (ResultSet resultSet = prepareStatement.executeQuery()) {
-				if (resultSet.next()) {
-					
-					idNewUser = resultSet.getInt(1);
-				}
-			}
-		}
-		return idNewUser;
 	}
 
 	/**
@@ -261,10 +238,8 @@ public class UserDAOImpl implements IUserDAO {
 
 		IConnectionPool connectionPool = ConnectionPoolImpl.getInstance();
 
-		SQLName sqlName = locale.equals(Locale.ENGLISH) ?
-						SQLName.GET_USER_BY_ID_SQL_EN 
-						: SQLName.GET_USER_BY_ID_SQL_RU;
-		
+		SQLName sqlName = locale.equals(Locale.ENGLISH) ? SQLName.GET_USER_BY_ID_SQL_EN : SQLName.GET_USER_BY_ID_SQL_RU;
+
 		User user = null;
 
 		try (Connection connection = connectionPool.getConnection()) {
@@ -276,30 +251,20 @@ public class UserDAOImpl implements IUserDAO {
 				try (ResultSet resultSet = prepStatement.executeQuery()) {
 
 					if (resultSet.next()) {
-						UserBuilder userBuilder = new UserBuilder()
-								.buildFirstName(resultSet.getString(1))
-								.buildLastName(resultSet.getString(2))
-								.buildDateOfBirth(resultSet.getDate(3))
+						UserBuilder userBuilder = new UserBuilder().buildFirstName(resultSet.getString(1))
+								.buildLastName(resultSet.getString(2)).buildDateOfBirth(resultSet.getDate(3))
 								.buildEmail(resultSet.getString(4));
 
-						Country country = new CountryBuilder()
-										.buildName(resultSet.getString(5))
-										.build();
+						Country country = new CountryBuilder().buildName(resultSet.getString(5)).build();
 
-						userBuilder.buildCountry(country)
-								.buildCity(resultSet.getString(6));
-						
-						Phone phone = new PhoneBuilder()
-								.buildCode(resultSet.getString(7))
-								.buildPhoneNumber(resultSet.getString(8))
-								.build();
-									
-						user = userBuilder
-								.buildPhone(phone)
-								.buildCurrency(resultSet.getString(9))
+						userBuilder.buildCountry(country).buildCity(resultSet.getString(6));
+
+						Phone phone = new PhoneBuilder().buildCode(resultSet.getString(7))
+								.buildPhoneNumber(resultSet.getString(8)).build();
+
+						user = userBuilder.buildPhone(phone).buildCurrency(resultSet.getString(9))
 								.buildBalance(resultSet.getBigDecimal(10))
-								.buildLocale(new Locale(resultSet.getString(11)))
-								.build();
+								.buildLocale(new Locale(resultSet.getString(11))).build();
 					}
 				}
 			}
@@ -333,9 +298,7 @@ public class UserDAOImpl implements IUserDAO {
 
 		IConnectionPool connectionPool = ConnectionPoolImpl.getInstance();
 
-		SQLName sqlName = locale.equals(Locale.ENGLISH)? 
-					SQLName.GET_USER_LIST_EN 
-					:SQLName.GET_USER_LIST_RU;
+		SQLName sqlName = locale.equals(Locale.ENGLISH) ? SQLName.GET_USER_LIST_EN : SQLName.GET_USER_LIST_RU;
 
 		List<User> userList = new ArrayList<>(recordCount);
 
@@ -350,37 +313,25 @@ public class UserDAOImpl implements IUserDAO {
 
 					while (resultSet.next()) {
 
-						UserBuilder userBuilder = new UserBuilder()
-								.buildId(resultSet.getInt(1))
-								.buildFirstName(resultSet.getString(2))
-								.buildLastName(resultSet.getString(3))
-								.buildDateOfBirth(resultSet.getDate(4))
-								.buildEmail(resultSet.getString(5));
+						UserBuilder userBuilder = new UserBuilder().buildId(resultSet.getInt(1))
+								.buildFirstName(resultSet.getString(2)).buildLastName(resultSet.getString(3))
+								.buildDateOfBirth(resultSet.getDate(4)).buildEmail(resultSet.getString(5));
 
-						Country country = new CountryBuilder()
-									.buildId(resultSet.getInt(6))
-									.buildName(resultSet.getString(7))
-									.build();
+						Country country = new CountryBuilder().buildId(resultSet.getInt(6))
+								.buildName(resultSet.getString(7)).build();
 
-						userBuilder.buildCountry(country)
-								   .buildCity(resultSet.getString(8));
+						userBuilder.buildCountry(country).buildCity(resultSet.getString(8));
 
-						Phone phone = new PhoneBuilder()
-										.buildCode(resultSet.getString(9))
-										.buildPhoneNumber(resultSet.getString(10))
-										.build();
+						Phone phone = new PhoneBuilder().buildCode(resultSet.getString(9))
+								.buildPhoneNumber(resultSet.getString(10)).build();
 
-						userBuilder.buildPhone(phone)
-								   .buildCurrency(resultSet.getString(11))
-								   .buildBalance(resultSet.getBigDecimal(12));
+						userBuilder.buildPhone(phone).buildCurrency(resultSet.getString(11))
+								.buildBalance(resultSet.getBigDecimal(12));
 
-						UserType userType =
-								UserType.getTypeByShortName(resultSet.getString(13));
+						UserType userType = UserType.getTypeByShortName(resultSet.getString(13));
 
-						userBuilder.buildUserType(userType)
-									.buildRegistrationTime(resultSet.getTimestamp(14))
-									.buildLocale(new Locale(resultSet.getString(15)))
-									.buildBanned(resultSet.getBoolean(16));
+						userBuilder.buildUserType(userType).buildRegistrationTime(resultSet.getTimestamp(14))
+								.buildLocale(new Locale(resultSet.getString(15))).buildBanned(resultSet.getBoolean(16));
 
 						User user = userBuilder.build();
 
@@ -429,7 +380,7 @@ public class UserDAOImpl implements IUserDAO {
 			}
 		} catch (SQLException e) {
 			throw new DAOException(DAO_EXCEPTION_MESSAGE, e);
-			
+
 		} catch (ConnectionPoolException e) {
 			LOGGER.log(Level.ERROR, e);
 			throw new DAOException(CONNECTION_POOL_EXCEPTION_MESSAGE, e);
@@ -456,14 +407,14 @@ public class UserDAOImpl implements IUserDAO {
 
 			try (PreparedStatement prepStatement = connection
 					.prepareStatement(SQLProvider.getInstance().getSql(sqlName))) {
-				
+
 				prepStatement.setInt(1, idUser);
 				prepStatement.execute();
 			}
 		} catch (SQLException e) {
 			System.out.println(e);
 			throw new DAOException(DAO_EXCEPTION_MESSAGE, e);
-			
+
 		} catch (ConnectionPoolException e) {
 			LOGGER.log(Level.ERROR, e);
 			throw new DAOException(CONNECTION_POOL_EXCEPTION_MESSAGE, e);
@@ -494,7 +445,7 @@ public class UserDAOImpl implements IUserDAO {
 		} catch (SQLException e) {
 			System.out.println(e);
 			throw new DAOException(DAO_EXCEPTION_MESSAGE, e);
-			
+
 		} catch (ConnectionPoolException e) {
 			LOGGER.log(Level.ERROR, e);
 			throw new DAOException(CONNECTION_POOL_EXCEPTION_MESSAGE, e);
@@ -513,7 +464,7 @@ public class UserDAOImpl implements IUserDAO {
 	 */
 	@Override
 	public void changeUserType(int idUser, UserType userType) throws DAOException {
-		
+
 		IConnectionPool connectionPool = ConnectionPoolImpl.getInstance();
 
 		SQLName sqlName = SQLName.UPDATE_USER_TYPE;
@@ -529,7 +480,7 @@ public class UserDAOImpl implements IUserDAO {
 		} catch (SQLException e) {
 			System.out.println(e);
 			throw new DAOException(DAO_EXCEPTION_MESSAGE, e);
-			
+
 		} catch (ConnectionPoolException e) {
 			LOGGER.log(Level.ERROR, e);
 			throw new DAOException(CONNECTION_POOL_EXCEPTION_MESSAGE, e);
@@ -553,8 +504,7 @@ public class UserDAOImpl implements IUserDAO {
 		SQLName sqlName = SQLName.CALL_CHANGE_USER_BALANCE;
 
 		try (Connection connection = connectionPool.getConnection()) {
-			try (CallableStatement statement = 
-					connection.prepareCall(SQLProvider.getInstance().getSql(sqlName))) {
+			try (CallableStatement statement = connection.prepareCall(SQLProvider.getInstance().getSql(sqlName))) {
 				statement.setInt(1, idUser);
 				statement.setBigDecimal(2, amount);
 
@@ -563,7 +513,7 @@ public class UserDAOImpl implements IUserDAO {
 		} catch (SQLException e) {
 			System.out.println(e);
 			throw new DAOException(DAO_EXCEPTION_MESSAGE, e);
-			
+
 		} catch (ConnectionPoolException e) {
 			LOGGER.log(Level.ERROR, e);
 			throw new DAOException(CONNECTION_POOL_EXCEPTION_MESSAGE, e);

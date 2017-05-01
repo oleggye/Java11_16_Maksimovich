@@ -30,9 +30,10 @@ public class LocalizationFIlter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
 		HttpSession session = httpRequest.getSession(true);
+		
 		Object userSessionLocaleParam = 
 				session.getAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL);
-
+		
 		if (userSessionLocaleParam == null) {
 			Locale userLocale = getSuitableLocalization(request.getLocale());
 			session.setAttribute(AttributeNameStore.ATTRIBUTE_NAME_LOCAL, userLocale);
@@ -50,7 +51,7 @@ public class LocalizationFIlter implements Filter {
 	/**
 	 * Method checks whether the localization is in the set of allowable values
 	 * 
-	 * if isn't than returns #Locale.US value
+	 * if isn't than returns #Locale.ENGLISH value
 	 * else returns the passed localization
 	 * 
 	 * @param locale
@@ -60,11 +61,10 @@ public class LocalizationFIlter implements Filter {
 
 	private Locale getSuitableLocalization(Locale locale) {
 
-		String localeLanguage = locale.getLanguage();
 		if (locale == null 
-				|| !localeLanguage.equals(Locale.US.getLanguage()) 
-				|| !localeLanguage.equalsIgnoreCase("ru")) {
-			locale = Locale.US;
+				|| !locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) 
+				|| !locale.getLanguage().equals("ru")) {
+			locale = Locale.ENGLISH;
 		}
 		return locale;
 	}
