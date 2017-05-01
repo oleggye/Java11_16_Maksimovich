@@ -131,7 +131,6 @@ public class UserDAOImpl implements IUserDAO {
 							idUser = generatedKeys.getInt(1);
 						}
 					}
-					// idUser = getNewUserId(connection);
 					user.setId(idUser);
 
 					addPrivateUserData(user, connection);
