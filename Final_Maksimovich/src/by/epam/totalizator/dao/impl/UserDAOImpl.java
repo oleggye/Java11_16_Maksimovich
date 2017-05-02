@@ -70,11 +70,15 @@ public class UserDAOImpl implements IUserDAO {
 
 					if (resultSet.next()) {
 
-						user = new UserBuilder().buildId(resultSet.getInt(1))
+						user = new UserBuilder()
+								.buildId(resultSet.getInt(1))
 								.buildUserType(UserType.getTypeByShortName(resultSet.getString(2)))
-								.buildBalance(resultSet.getBigDecimal(3)).buildCurrency(resultSet.getString(4))
-								.buildLocale(new Locale(resultSet.getString(5))).buildEmail(login)
-								.buildBanned(resultSet.getBoolean(6)).build();
+								.buildBalance(resultSet.getBigDecimal(3))
+								.buildCurrency(resultSet.getString(4))
+								.buildLocale(new Locale(resultSet.getString(5)))
+								.buildEmail(login)
+								.buildBanned(resultSet.getBoolean(6))
+								.build();
 					}
 				}
 			}
@@ -107,14 +111,15 @@ public class UserDAOImpl implements IUserDAO {
 
 		try (Connection connection = connectionPool.getConnection()) {
 			try (PreparedStatement prepareStatement = connection
-					.prepareStatement(SQLProvider.getInstance().getSql(sqlName)
-							,Statement.RETURN_GENERATED_KEYS)) {
+					.prepareStatement(SQLProvider.getInstance()
+							.getSql(sqlName), Statement.RETURN_GENERATED_KEYS)) {
 
 				connection.setAutoCommit(false);
 
 				prepareStatement.setString(1, user.getFirstName());
 				prepareStatement.setString(2, user.getLastName());
-				prepareStatement.setDate(3, new java.sql.Date(user.getDateOfBirth().getTime()));
+				prepareStatement.setDate(3, 
+						new java.sql.Date(user.getDateOfBirth().getTime()));
 				prepareStatement.setString(4, user.getEmail());
 				prepareStatement.setInt(5, user.getCountry().getId());
 				prepareStatement.setString(6, user.getCity());
@@ -125,22 +130,20 @@ public class UserDAOImpl implements IUserDAO {
 
 				if (prepareStatement.executeUpdate() > 0) {
 
-					int idUser = 0;
 					try (ResultSet generatedKeys = prepareStatement.getGeneratedKeys()) {
+						
 						if (generatedKeys.next()) {
-							idUser = generatedKeys.getInt(1);
+							int idUser = generatedKeys.getInt(1);
+
+							user.setId(idUser);
+							addPrivateUserData(user, connection);
 						}
 					}
-					user.setId(idUser);
-
-					addPrivateUserData(user, connection);
 				}
-
 				connection.commit();
 				connection.setAutoCommit(true);
 
 			} catch (SQLException ex) {
-
 				connection.rollback();
 				connection.setAutoCommit(true);
 				throw ex;
@@ -250,20 +253,29 @@ public class UserDAOImpl implements IUserDAO {
 				try (ResultSet resultSet = prepStatement.executeQuery()) {
 
 					if (resultSet.next()) {
-						UserBuilder userBuilder = new UserBuilder().buildFirstName(resultSet.getString(1))
-								.buildLastName(resultSet.getString(2)).buildDateOfBirth(resultSet.getDate(3))
-								.buildEmail(resultSet.getString(4));
+						UserBuilder userBuilder = new UserBuilder()
+													.buildFirstName(resultSet.getString(1))
+													.buildLastName(resultSet.getString(2))
+													.buildDateOfBirth(resultSet.getDate(3))
+													.buildEmail(resultSet.getString(4));
 
-						Country country = new CountryBuilder().buildName(resultSet.getString(5)).build();
+						Country country = new CountryBuilder()
+											.buildName(resultSet.getString(5))
+											.build();
 
-						userBuilder.buildCountry(country).buildCity(resultSet.getString(6));
+						userBuilder.buildCountry(country)
+									.buildCity(resultSet.getString(6));
 
-						Phone phone = new PhoneBuilder().buildCode(resultSet.getString(7))
-								.buildPhoneNumber(resultSet.getString(8)).build();
+						Phone phone = new PhoneBuilder()
+										.buildCode(resultSet.getString(7))
+										.buildPhoneNumber(resultSet.getString(8))
+										.build();
 
-						user = userBuilder.buildPhone(phone).buildCurrency(resultSet.getString(9))
-								.buildBalance(resultSet.getBigDecimal(10))
-								.buildLocale(new Locale(resultSet.getString(11))).build();
+						user = userBuilder.buildPhone(phone)
+										  .buildCurrency(resultSet.getString(9))
+										  .buildBalance(resultSet.getBigDecimal(10))
+										  .buildLocale(new Locale(resultSet.getString(11)))
+										  .build();
 					}
 				}
 			}
@@ -312,25 +324,36 @@ public class UserDAOImpl implements IUserDAO {
 
 					while (resultSet.next()) {
 
-						UserBuilder userBuilder = new UserBuilder().buildId(resultSet.getInt(1))
-								.buildFirstName(resultSet.getString(2)).buildLastName(resultSet.getString(3))
-								.buildDateOfBirth(resultSet.getDate(4)).buildEmail(resultSet.getString(5));
+						UserBuilder userBuilder = new UserBuilder()
+													.buildId(resultSet.getInt(1))
+													.buildFirstName(resultSet.getString(2))
+													.buildLastName(resultSet.getString(3))
+													.buildDateOfBirth(resultSet.getDate(4))
+													.buildEmail(resultSet.getString(5));
 
-						Country country = new CountryBuilder().buildId(resultSet.getInt(6))
-								.buildName(resultSet.getString(7)).build();
+						Country country = new CountryBuilder()
+											.buildId(resultSet.getInt(6))
+											.buildName(resultSet.getString(7))
+											.build();
 
-						userBuilder.buildCountry(country).buildCity(resultSet.getString(8));
+						userBuilder.buildCountry(country)
+								   .buildCity(resultSet.getString(8));
 
-						Phone phone = new PhoneBuilder().buildCode(resultSet.getString(9))
-								.buildPhoneNumber(resultSet.getString(10)).build();
+						Phone phone = new PhoneBuilder()
+										.buildCode(resultSet.getString(9))
+										.buildPhoneNumber(resultSet.getString(10))
+										.build();
 
-						userBuilder.buildPhone(phone).buildCurrency(resultSet.getString(11))
-								.buildBalance(resultSet.getBigDecimal(12));
+						userBuilder.buildPhone(phone)
+								   .buildCurrency(resultSet.getString(11))
+								   .buildBalance(resultSet.getBigDecimal(12));
 
 						UserType userType = UserType.getTypeByShortName(resultSet.getString(13));
 
-						userBuilder.buildUserType(userType).buildRegistrationTime(resultSet.getTimestamp(14))
-								.buildLocale(new Locale(resultSet.getString(15))).buildBanned(resultSet.getBoolean(16));
+						userBuilder.buildUserType(userType)
+								   .buildRegistrationTime(resultSet.getTimestamp(14))
+								   .buildLocale(new Locale(resultSet.getString(15)))
+								   .buildBanned(resultSet.getBoolean(16));
 
 						User user = userBuilder.build();
 

@@ -119,25 +119,49 @@ public class BettingDAOImpl implements IBettingDAO {
 
 					while (resultSet.next()) {
 
-						BettingBuilder bettingBuilder = new BettingBuilder().buildId(resultSet.getInt(1))
-								.buildBetTime(resultSet.getTimestamp(2));
+						BettingBuilder bettingBuilder = new BettingBuilder()
+														.buildId(resultSet.getInt(1))
+														.buildBetTime(resultSet.getTimestamp(2));
 
-						Sport sport = new SportBuilder().buildName(resultSet.getString(3)).build();
-						Tournament tournament = new TournamentBuilder().buildSport(sport)
-								.buildName(resultSet.getString(4)).build();
-						Club homeClub = new ClubBuilder().buildName(resultSet.getString(5)).build();
-						Team homeTeam = new TeamBuilder().buildSport(sport).buildClub(homeClub).build();
-						Club awayClub = new ClubBuilder().buildName(resultSet.getString(6)).build();
-						Team awayTeam = new TeamBuilder().buildSport(sport).buildClub(awayClub).build();
-						Competition competition = new CompetitionBuilder().buildTournament(tournament).buildSport(sport)
-								.buildHomeTeam(homeTeam).buildAwayTeam(awayTeam).build();
+						Sport sport = new SportBuilder()
+										.buildName(resultSet.getString(3))
+										.build();
+						Tournament tournament = new TournamentBuilder()
+												.buildSport(sport)
+												.buildName(resultSet.getString(4))
+												.build();
+						Club homeClub = new ClubBuilder()
+											.buildName(resultSet.getString(5))
+											.build();
+						Team homeTeam = new TeamBuilder()
+											.buildSport(sport)
+											.buildClub(homeClub)
+											.build();
+						Club awayClub = new ClubBuilder()
+											.buildName(resultSet.getString(6))
+											.build();
+						Team awayTeam = new TeamBuilder()
+											.buildSport(sport)
+											.buildClub(awayClub)
+											.build();
+						Competition competition = new CompetitionBuilder()
+													.buildTournament(tournament)
+													.buildSport(sport)
+													.buildHomeTeam(homeTeam)
+													.buildAwayTeam(awayTeam)
+													.build();
 						bettingBuilder.buildCompetition(competition)
-								.buildBetType(EventType.getTypeByShortName(resultSet.getString(7)))
-								.buildBetSize(resultSet.getBigDecimal(8)).buildBetRate(resultSet.getBigDecimal(9))
-								.buildGain(resultSet.getBigDecimal(10));
-						User user = new UserBuilder().buildLocale(new Locale(resultSet.getString(11))).build();
+									  .buildBetType(EventType.getTypeByShortName(resultSet.getString(7)))
+									  .buildBetSize(resultSet.getBigDecimal(8))
+									  .buildBetRate(resultSet.getBigDecimal(9))
+									  .buildGain(resultSet.getBigDecimal(10));
+						User user = new UserBuilder()
+										.buildLocale(new Locale(resultSet.getString(11)))
+										.build();
 
-						Betting betting = bettingBuilder.buildUser(user).build();
+						Betting betting = bettingBuilder
+														.buildUser(user)
+														.build();
 						bettingList.add(betting);
 					}
 				}
@@ -220,17 +244,23 @@ public class BettingDAOImpl implements IBettingDAO {
 				try (ResultSet resultSet = prepStatement.executeQuery()) {
 
 					while (resultSet.next()) {
-						BettingBuilder bettingBuilder = new BettingBuilder().buildId(resultSet.getInt(1));
+						BettingBuilder bettingBuilder = new BettingBuilder()
+															.buildId(resultSet.getInt(1));
 
-						Competition competition = new CompetitionBuilder().buildId(resultSet.getInt(2)).build();
+						Competition competition = new CompetitionBuilder()
+														.buildId(resultSet.getInt(2))
+														.build();
 						bettingBuilder.buildCompetition(competition);
 
-						User user = new UserBuilder().buildId(resultSet.getInt(3)).build();
+						User user = new UserBuilder()
+										.buildId(resultSet.getInt(3))
+										.build();
 						bettingBuilder.buildUser(user);
 
 						Betting betting = bettingBuilder
 								.buildBetType(EventType.getTypeByShortName(resultSet.getString(4)))
-								.buildBetRate(resultSet.getBigDecimal(5)).buildBetSize(resultSet.getBigDecimal(6))
+								.buildBetRate(resultSet.getBigDecimal(5))
+								.buildBetSize(resultSet.getBigDecimal(6))
 								.build();
 
 						bettingList.add(betting);
