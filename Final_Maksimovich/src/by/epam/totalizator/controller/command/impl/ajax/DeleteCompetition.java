@@ -87,7 +87,7 @@ public class DeleteCompetition implements ICommand {
 	/**
 	 * Method gets id string from the user's request by key and delegate safety
 	 * parsing of it to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#parseId}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#parseId}
 	 */
 	private int getIdCompetition(HttpServletRequest request) {
 		return Integer.valueOf(request.getParameter(ParamNameStore.PARAM_NAME_ID_COMPETITION));

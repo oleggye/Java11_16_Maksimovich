@@ -37,9 +37,9 @@ import org.apache.logging.log4j.LogManager;
  */
 public class ConnectionPoolImpl implements IConnectionPool {
 
-	private final Logger logger = LogManager.getLogger(IConnectionPool.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(IConnectionPool.class.getName());
 
-	private static final IConnectionPool instance = new ConnectionPoolImpl();
+	private static final IConnectionPool INSTANCE = new ConnectionPoolImpl();
 
 	/**
 	 * Synchronized queue of prepared available connections
@@ -76,7 +76,7 @@ public class ConnectionPoolImpl implements IConnectionPool {
 	}
 
 	public static IConnectionPool getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class ConnectionPoolImpl implements IConnectionPool {
 			closeConnectionsQueue(givenAwayConQueue);
 			closeConnectionsQueue(availableConnectionQueue);
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Error closing the connection.", e);
+			LOGGER.log(Level.ERROR, "Error closing the connection.", e);
 		}
 	}
 

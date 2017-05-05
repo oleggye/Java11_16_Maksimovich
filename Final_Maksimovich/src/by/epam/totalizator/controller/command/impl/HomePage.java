@@ -18,7 +18,7 @@ import by.epam.totalizator.controller.command.ICommand;
 import by.epam.totalizator.controller.util.AttributeNameStore;
 import by.epam.totalizator.controller.util.PageKeyStore;
 import by.epam.totalizator.controller.util.ParamNameStore;
-import by.epam.totalizator.controller.util.SupportClass;
+import by.epam.totalizator.controller.util.UtilClass;
 import by.epam.totalizator.resource.ConfigurationManager;
 import by.epam.totalizator.service.exception.ServiceException;
 import by.epam.totalizator.service.exception.ServiceValidationException;
@@ -124,12 +124,12 @@ public class HomePage implements ICommand {
 	/**
 	 * Method gets page number string from the user's request and delegate
 	 * safety parsing of it to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#parsePageNumber}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#parsePageNumber}
 	 */
 	private int getPageNumber(HttpServletRequest request) {
 
 		String pageNumberParam = request.getParameter(ParamNameStore.PARAM_NAME_PAGE_NUMBER);
-		int pageNumber = SupportClass.parsePageNumber(pageNumberParam);
+		int pageNumber = UtilClass.parsePageNumber(pageNumberParam);
 
 		return pageNumber;
 	}
@@ -146,15 +146,15 @@ public class HomePage implements ICommand {
 	 * {@link UserType#ADMINISTRATOR} or {@link UserType#BOOKMAKER}
 	 */
 	private boolean isUserTypeClient(UserType userType) {
-		return SupportClass.isUserTypeClient(userType);
+		return UtilClass.isUserTypeClient(userType);
 	}
 
 	/**
 	 * Method delegates calculating page count to it to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#calculatePageCount}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#calculatePageCount}
 	 */
 	private int calculatePageCount(int availableCount) {
-		return SupportClass.calculatePageCount(availableCount, RECORD_QUANTITY_PER_PAGE);
+		return UtilClass.calculatePageCount(availableCount, RECORD_QUANTITY_PER_PAGE);
 	}
 	
 	/**

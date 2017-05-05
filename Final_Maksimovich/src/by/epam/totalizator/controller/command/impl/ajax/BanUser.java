@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import by.epam.totalizator.controller.command.ICommand;
 import by.epam.totalizator.controller.util.AttributeNameStore;
 import by.epam.totalizator.controller.util.ParamNameStore;
-import by.epam.totalizator.controller.util.SupportClass;
+import by.epam.totalizator.controller.util.UtilClass;
 import by.epam.totalizator.resource.LocalizationBundle;
 import by.epam.totalizator.service.exception.ServiceException;
 import by.epam.totalizator.service.exception.ServiceValidationException;
@@ -86,11 +86,11 @@ public class BanUser implements ICommand {
 	/**
 	 * Method gets id string from the user's request by key and delegate safety
 	 * parsing of it to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#parseId}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#parseId}
 	 */
 	private int getIdUser(HttpServletRequest request) {
 		String idParam = request.getParameter(ParamNameStore.PARAM_NAME_ID_USER);
-		return SupportClass.parseId(idParam);
+		return UtilClass.parseId(idParam);
 	}
 
 	/**

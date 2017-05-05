@@ -20,7 +20,7 @@ import by.epam.totalizator.controller.command.impl.EarningManagement;
  */
 public class CurrencyFormatTag extends SimpleTagSupport {
 
-	private static final Logger logger = LogManager.getLogger(EarningManagement.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(EarningManagement.class.getName());
 
 	private static final String FORMATTER_PATTERN = "#0.00";
 	private static final String RESULT_PATTERN = "%s %s";
@@ -60,7 +60,7 @@ public class CurrencyFormatTag extends SimpleTagSupport {
 				currencyValue = Currency.valueOf(this.currency);
 				
 			} catch (IllegalArgumentException e) {
-				logger.log(Level.ERROR, e);
+				LOGGER.log(Level.ERROR, e);
 				currencyValue = Currency.DEFAULT;
 			}
 			currencySymbol = currencyValue.getCurrencySymbol();

@@ -23,7 +23,7 @@ import by.epam.totalizator.bean.build.UserBuilder;
 import by.epam.totalizator.controller.command.ICommand;
 import by.epam.totalizator.controller.util.AttributeNameStore;
 import by.epam.totalizator.controller.util.ParamNameStore;
-import by.epam.totalizator.controller.util.SupportClass;
+import by.epam.totalizator.controller.util.UtilClass;
 import by.epam.totalizator.resource.LocalizationBundle;
 import by.epam.totalizator.service.exception.ServiceException;
 import by.epam.totalizator.service.exception.ServiceValidationException;
@@ -152,10 +152,10 @@ public class MakeBetting implements ICommand {
 	/**
 	 * Method gets bet string from the request and delegate safety parsing of it
 	 * to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#parseBigDecimal}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#parseBigDecimal}
 	 */
 	private BigDecimal getBet(HttpServletRequest request, String key) {
 		String betParam = request.getParameter(key);
-		return SupportClass.parseBigDecimal(betParam);
+		return UtilClass.parseBigDecimal(betParam);
 	}
 }

@@ -24,7 +24,7 @@ import by.epam.totalizator.controller.command.ICommand;
 import by.epam.totalizator.controller.util.AttributeNameStore;
 import by.epam.totalizator.controller.util.PageKeyStore;
 import by.epam.totalizator.controller.util.ParamNameStore;
-import by.epam.totalizator.controller.util.SupportClass;
+import by.epam.totalizator.controller.util.UtilClass;
 import by.epam.totalizator.resource.ConfigurationManager;
 import by.epam.totalizator.resource.LocalizationBundle;
 import by.epam.totalizator.service.exception.ServiceException;
@@ -176,20 +176,20 @@ public class SignUp implements ICommand {
 	/**
 	 * Method gets date string from the user's request and delegate safety
 	 * parsing of it to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#parseDate}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#parseDate}
 	 */
 	private Date getDate(HttpServletRequest request) {
 		String dateParam = request.getParameter(ParamNameStore.PARAM_NAME_DATE);
-		return SupportClass.parseDate(dateParam);
+		return UtilClass.parseDate(dateParam);
 	}
 
 	/**
 	 * Method gets id string from the user's request by key and delegate safety
 	 * parsing of it to
-	 * {@link by.epam.totalizator.controller.util.SupportClass#parseId}
+	 * {@link by.epam.totalizator.controller.util.UtilClass#parseId}
 	 */
 	private int getId(HttpServletRequest request, String key) {
 		String idParam = request.getParameter(key);
-		return SupportClass.parseId(idParam);
+		return UtilClass.parseId(idParam);
 	}
 }
