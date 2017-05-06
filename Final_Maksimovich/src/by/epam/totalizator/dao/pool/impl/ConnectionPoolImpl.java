@@ -41,6 +41,7 @@ public class ConnectionPoolImpl implements IConnectionPool {
 
 	private static final IConnectionPool INSTANCE = new ConnectionPoolImpl();
 
+	private static final int DEFAULT_POOL_SIZE = 5;
 	/**
 	 * Synchronized queue of prepared available connections
 	 */
@@ -71,7 +72,7 @@ public class ConnectionPoolImpl implements IConnectionPool {
 		try {
 			this.poolSize = Integer.parseInt(dbResourceManager.getValue(DBParameter.DB_POOL_SIZE));
 		} catch (NumberFormatException e) {
-			this.poolSize = 5;
+			this.poolSize = DEFAULT_POOL_SIZE;
 		}
 	}
 
