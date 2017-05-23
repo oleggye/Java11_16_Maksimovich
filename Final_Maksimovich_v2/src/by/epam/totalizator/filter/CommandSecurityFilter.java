@@ -12,6 +12,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,8 +21,6 @@ import org.apache.logging.log4j.Logger;
 import by.epam.totalizator.bean.UserType;
 import by.epam.totalizator.controller.command.CommandName;
 import by.epam.totalizator.controller.util.AttributeNameStore;
-import by.epam.totalizator.controller.util.PageKeyStore;
-import by.epam.totalizator.resource.ConfigurationManager;
 
 /**
  * Servlet Filter implementation class CommandSecurityFilter
@@ -37,7 +37,8 @@ public class CommandSecurityFilter implements Filter {
 	private Set<CommandName> commandSetForUnauthorizedOrBannedUser = new HashSet<>();
 
 	/**
-	 * Method is used to restrict access to pages for unauthorized or banned users 
+	 * Method is used to restrict access to pages for unauthorized or banned
+	 * users
 	 * 
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
@@ -45,6 +46,7 @@ public class CommandSecurityFilter implements Filter {
 			throws IOException, ServletException {
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
 		UserType userType = (UserType) httpRequest.getSession()
 				.getAttribute(AttributeNameStore.ATTRIBUTE_NAME_USER_TYPE);
@@ -59,16 +61,15 @@ public class CommandSecurityFilter implements Filter {
 				boolean isPermited = commandSetForUnauthorizedOrBannedUser.contains(commandName);
 
 				if (!isPermited) {
-					String page = ConfigurationManager.getProperty(PageKeyStore.ERROR_PAGE_KEY);
-					request.getRequestDispatcher(page).forward(request, response);
+					LOGGER.log(Level.WARN, "Unathorized attempt to execute command: " + commandName);
+					httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
 				} else {
 					chain.doFilter(request, response);
 				}
 
 			} catch (IllegalArgumentException e) {
 				LOGGER.log(Level.WARN, e);
-				String page = ConfigurationManager.getProperty(PageKeyStore.ERROR_PAGE_KEY);
-				request.getRequestDispatcher(page).forward(request, response);
+				httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		} else {
 			chain.doFilter(request, response);
