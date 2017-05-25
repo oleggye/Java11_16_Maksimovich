@@ -62,7 +62,7 @@ public class CommandSecurityFilter implements Filter {
 
 				if (!isPermited) {
 					LOGGER.log(Level.WARN, "Unathorized attempt to execute command: " + commandName);
-					httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
+					httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 				} else {
 					chain.doFilter(request, response);
 				}

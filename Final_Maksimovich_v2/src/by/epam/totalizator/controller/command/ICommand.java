@@ -14,7 +14,7 @@ public interface ICommand {
 	 * @param HttpServletRequest
 	 *            request from application's client
 	 * @param HttpServletResponse
-	 * 			  response which will be send to the client
+	 *            response which will be send to the client
 	 * @throws IOException
 	 * @throws ServletException
 	 */

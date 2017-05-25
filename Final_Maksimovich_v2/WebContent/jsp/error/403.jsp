@@ -6,9 +6,9 @@
 <fmt:setLocale value="${sessionScope.local}" />
 <fmt:setBundle basename="localization.local" var="localBundle" />
 
-<fmt:message bundle="${localBundle}" key="local.error.500.title"
+<fmt:message bundle="${localBundle}" key="local.error.403.title"
 	var="title" />
-<fmt:message bundle="${localBundle}" key="local.error.500.message"
+<fmt:message bundle="${localBundle}" key="local.error.403.message"
 	var="message" />
 
 <c:set var="login" value="${sessionScope.login}" />
@@ -24,7 +24,6 @@
 <link rel="stylesheet" href="css/verticalmenu.css">
 <link rel="stylesheet" href="css/modal.css">
 <link rel="stylesheet" href="css/style.css">
-
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 
@@ -54,7 +53,7 @@ h1 {
 
 h2 {
 	padding: 0 1em;
-	font-size : 5em;
+	font-size: 5em;
 	color: #9d9d9d;
 	font-size: 5em;
 }
@@ -70,14 +69,14 @@ h2 {
 		<div class="row content">
 
 			<div class="col-sm-2 text-center">
-				<h1>500</h1>
+				<h1>403</h1>
 				<h2>
 					<c:out value="${message}" />
 				</h2>
 			</div>
 
 			<div class="col-sm-10 text-center">
-				<img class="image" src="images/500.png" alt="Status 500.">
+				<img class="image" src="images/goalie.png" alt="Status 403.">
 			</div>
 
 

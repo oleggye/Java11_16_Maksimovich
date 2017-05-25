@@ -8,6 +8,8 @@
 
 <fmt:message bundle="${localBundle}" key="local.error.404.title"
 	var="title" />
+<fmt:message bundle="${localBundle}" key="local.error.404.message"
+	var="message" />
 
 <c:set var="login" value="${sessionScope.login}" />
 
@@ -44,9 +46,16 @@
 }
 
 h1 {
-	padding: 1em;
+	padding: 1em 1em 0 1em;
 	font-size: 6em;
 	color: #9d9d9d;
+}
+
+h2 {
+	padding: 0 1em;
+	font-size: 5em;
+	color: #9d9d9d;
+	font-size: 5em;
 }
 </style>
 </head>
@@ -61,7 +70,10 @@ h1 {
 
 
 			<div class="col-sm-2 text-center">
-				<h1>404 Not Found</h1>
+				<h1>404</h1>
+				<h2>
+					<c:out value="${message}" />
+				</h2>
 			</div>
 
 			<div class="col-sm-10 text-center">

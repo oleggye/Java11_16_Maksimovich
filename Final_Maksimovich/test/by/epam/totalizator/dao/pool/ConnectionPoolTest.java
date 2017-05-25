@@ -17,7 +17,7 @@ import by.epam.totalizator.dao.util.SQLProvider;
 public class ConnectionPoolTest {
 
 	private IConnectionPool pool;
-	private static final int SIZE = 1000;
+	private static final int SIZE = 10000;
 	private static final SQLName SQL_NAME = SQLName.GET_COUNTRY_LIST_EN;
 
 	@Before
@@ -40,6 +40,8 @@ public class ConnectionPoolTest {
 	@Test
 	public void testConnectionPool() throws InterruptedException {
 
+		long startPoint = System.nanoTime();
+		
 		Thread[] arr = new Thread[SIZE];
 
 		for (int i = 0; i < SIZE; i++) {
@@ -66,5 +68,10 @@ public class ConnectionPoolTest {
 		for (int i = 0; i < SIZE; i++) {
 			arr[i].join();
 		}
+		
+		long endPoint = System.nanoTime();
+		double resultTime_ms = (endPoint - startPoint)/1000000;
+		
+		System.out.println("Result: " + resultTime_ms + " ms");
 	}
 }

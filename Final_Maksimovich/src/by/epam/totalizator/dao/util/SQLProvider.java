@@ -16,7 +16,7 @@ import by.epam.totalizator.dao.util.sql.TournamentSQLStore;
 import by.epam.totalizator.dao.util.sql.UserSQLStore;
 
 /**
- * Class for handling name of sql-queries and certain strings with querier
+ * Class for handling name of sql-queries and certain strings with the query
  */
 public class SQLProvider {
 

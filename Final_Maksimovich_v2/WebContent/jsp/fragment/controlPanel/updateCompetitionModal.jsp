@@ -83,7 +83,7 @@
 
 									<td id="comp-sport-td"><select class="form-control"
 										name="idSport" id="comp-sport-select"
-										onchange="takeDataForCompetitionUpdate()" disabled>
+										onchange="takeDataForCompetitionUpdate()">
 											<c:forEach var="elem" items="${requestScope.sportList}">
 
 												<option value="${elem.id}"><c:out
