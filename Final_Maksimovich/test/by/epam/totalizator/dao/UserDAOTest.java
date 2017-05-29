@@ -12,7 +12,6 @@ import by.epam.totalizator.bean.Country;
 import by.epam.totalizator.bean.Phone;
 import by.epam.totalizator.bean.Secret;
 import by.epam.totalizator.bean.User;
-import by.epam.totalizator.bean.UserType;
 import by.epam.totalizator.bean.build.CountryBuilder;
 import by.epam.totalizator.bean.build.PhoneBuilder;
 import by.epam.totalizator.bean.build.SecretBuilder;
@@ -27,8 +26,8 @@ public class UserDAOTest {
 	private IUserDAO userDao;
 	private IConnectionPool pool;
 
-//	private static final int ID_USER = 1;
-//	private static final BigDecimal AMOUNT = new BigDecimal(-1);
+	private static final int ID_USER = 1;
+	private static final BigDecimal AMOUNT = new BigDecimal(-1);
 
 	private User user;
 	private static final String firstName = "Test";
@@ -50,24 +49,24 @@ public class UserDAOTest {
 		userDao = DAOFactory.getInstance().getUserDAO();
 		pool = ConnectionPoolImpl.getInstance();
 		pool.init();
-		
+
 		user = buildUser();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		userDao = null;
-		
+
 		pool.dispose();
 		pool = null;
-		
+
 		user = null;
 	}
 
-	// @Test
-	// public void testIncreaseUserBalance() throws DAOException {
-	// userDao.changeUserBalance(ID_USER, AMOUNT);
-	// }
+	@Test
+	public void testIncreaseUserBalance() throws DAOException {
+		userDao.changeUserBalance(ID_USER, AMOUNT);
+	}
 
 	@Test
 	public void testRegistration() throws DAOException {
@@ -75,31 +74,14 @@ public class UserDAOTest {
 	}
 
 	private User buildUser() {
-		Country country = new CountryBuilder()
-								.buildId(idCountry)
-								.build();
-		Phone phone = new PhoneBuilder()
-								.buildCode(phoneCode)
-								.buildPhoneNumber(phoneNumber)
-								.build();
-		Secret secret = new SecretBuilder()
-							.buildSecretQuestionId(secretQuestionId)
-							.buidSecretAnswer(secretAnswer)
-							.build();
-		
-		User user = new UserBuilder()
-						.buildFirstName(firstName)
-						.buildLastName(lastName)
-						.buildDateOfBirth(dateOfBirth)
-						.buildEmail(email)
-						.buildPassword(password)
-						.buildSecret(secret)
-						.buildCountry(country)
-						.buildCity(city)
-						.buildPhone(phone)
-						.buildCurrency(currency)
-						.buildLocale(locale)
-						.build();
-		return user;				
+		Country country = new CountryBuilder().buildId(idCountry).build();
+		Phone phone = new PhoneBuilder().buildCode(phoneCode).buildPhoneNumber(phoneNumber).build();
+		Secret secret = new SecretBuilder().buildSecretQuestionId(secretQuestionId).buidSecretAnswer(secretAnswer)
+				.build();
+
+		User user = new UserBuilder().buildFirstName(firstName).buildLastName(lastName).buildDateOfBirth(dateOfBirth)
+				.buildEmail(email).buildPassword(password).buildSecret(secret).buildCountry(country).buildCity(city)
+				.buildPhone(phone).buildCurrency(currency).buildLocale(locale).build();
+		return user;
 	}
 }

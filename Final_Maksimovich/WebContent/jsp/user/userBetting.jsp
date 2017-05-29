@@ -68,7 +68,7 @@
 
 			<c:import url="/jsp/fragment/controlPanel/menuBar.jsp" />
 
-			<div class="col-sm-8 text-center">
+			<div class="col-sm-9 text-center">
 
 				<h1>
 					<c:out value="${caption}" />
@@ -133,8 +133,10 @@
 				<c:import url="/jsp/fragment/pagination.jsp" />
 
 			</div>
+			<div class="col-sm-1 sidenav">
+			</div>
 
-			<c:import url="/jsp/fragment/advertisement.jsp" />
+<%-- 			<c:import url="/jsp/fragment/advertisement.jsp" /> --%>
 		</div>
 	</div>
 

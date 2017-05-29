@@ -4,11 +4,29 @@ public enum EventType {
 
 	HOME_WIN("H"), DRAW("D"), AWAY_WIN("A");
 
+	/**
+	 * a unique value which is used for convenient representation of a
+	 * {@link EventType} instance
+	 */
 	private String shortName;
 
 	private EventType(String shortName) {
 		this.shortName = shortName;
 	}
+
+	/**
+	 * Method takes an instance of {@link EventType} by its short name
+	 * 
+	 * @param shortName
+	 *            a unique value for the instance of {@link EventType}
+	 * 
+	 *            <ul>
+	 *            <li>HOME_WIN <-> "H"</li>
+	 *            <li>DRAW <-> "D"</li>
+	 *            <li>AWAY_WIN <-> "A"</li>
+	 *            </ul>
+	 * @return an instance of {@link EventType}
+	 */
 
 	public static EventType getTypeByShortName(String shortName) {
 		switch (shortName) {
@@ -23,6 +41,11 @@ public enum EventType {
 		}
 	}
 
+	/**
+	 * Method takes a unique {@link #shortName}
+	 * 
+	 * @return
+	 */
 	public String getShortName() {
 		return this.shortName;
 	}

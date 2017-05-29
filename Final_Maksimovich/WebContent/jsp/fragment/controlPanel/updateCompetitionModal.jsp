@@ -193,7 +193,7 @@
 		var countrySelectId = "#comp-country-select";
 
 		var updateCompetitionButtonId = "#updateCompetitionBtn";
-		var errorDivId = "#error-div";
+		var errorDivId = "#update-error-div";
 
 		var requestParams = {
 			'command' : 'data-for-competition',
@@ -227,7 +227,7 @@
 
 		var dateFieldId = '#date-field1';
 		var updateCompetitionButtonId = "#updateCompetitionBtn";
-		var errorDivId = "#error-div";
+		var errorDivId = "#update-error-div";
 
 		var requestParams = {
 			'command' : 'competition-info',

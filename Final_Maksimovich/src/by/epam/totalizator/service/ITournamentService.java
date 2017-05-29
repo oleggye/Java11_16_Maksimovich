@@ -18,7 +18,7 @@ public interface ITournamentService {
 	 * 
 	 * @param idSport
 	 * @param locale
-	 * @return
+	 * @return {@link java.util.List} instances of {@link Tournament}
 	 * @throws ServiceException
 	 * @throws ServiceValidationException
 	 */

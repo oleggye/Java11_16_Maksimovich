@@ -1,7 +1,7 @@
 package by.epam.totalizator.controller.util;
 
 /**
- * Class contains request parameter names constant
+ * Class contains constant request parameter names
  */
 public final class ParamNameStore {
 

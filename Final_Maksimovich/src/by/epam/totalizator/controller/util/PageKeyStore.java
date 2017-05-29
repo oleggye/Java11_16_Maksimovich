@@ -1,7 +1,7 @@
 package by.epam.totalizator.controller.util;
 
 /**
- * Class contains page constant which are keys in resource file
+ * Class contains page constants which are keys in resource file
  */
 public final class PageKeyStore {
 

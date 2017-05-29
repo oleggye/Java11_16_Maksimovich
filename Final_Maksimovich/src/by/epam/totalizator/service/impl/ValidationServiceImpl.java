@@ -17,7 +17,7 @@ import by.epam.totalizator.service.IValidationService;
 import by.epam.totalizator.service.exception.ServiceValidationException;
 
 /**
- * #IValidationService interface implementation for validationS
+ * #IValidationService interface implementation for validation
  */
 public class ValidationServiceImpl implements IValidationService {
 
@@ -154,6 +154,7 @@ public class ValidationServiceImpl implements IValidationService {
 		}
 	}
 
+	@Override
 	public void validateIdTournament(int idTournament) throws ServiceValidationException {
 
 		if (validator.isIdInvalid(idTournament)) {
@@ -168,12 +169,14 @@ public class ValidationServiceImpl implements IValidationService {
 		}
 	}
 
+	@Override
 	public void validatePageNumber(int pageNumber) throws ServiceValidationException {
 		if (validator.isIdInvalid(pageNumber)) {
 			throw new ServiceValidationException("Wrong param: pageNumber= " + pageNumber);
 		}
 	}
 
+	@Override
 	public void validateStartTime(Date startTime) throws ServiceValidationException {
 
 		if (validator.isStartTimeInvalid(startTime)) {
@@ -181,6 +184,7 @@ public class ValidationServiceImpl implements IValidationService {
 		}
 	}
 
+	@Override
 	public void validateIdClub(int id) throws ServiceValidationException {
 
 		if (validator.isIdInvalid(id)) {

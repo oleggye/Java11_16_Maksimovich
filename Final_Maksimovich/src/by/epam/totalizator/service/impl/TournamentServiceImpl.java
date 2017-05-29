@@ -28,7 +28,7 @@ public class TournamentServiceImpl implements ITournamentService {
 	 * @param idSport
 	 * @param locale
 	 *            for a localized query to the database
-	 * @return {@link java.util.List} instances of {@link Sport}
+	 * @return {@link java.util.List} instances of {@link Tournament}
 	 * @throws ServiceException
 	 *             when catched error from dao {@link DAOException} wraps it up
 	 * @throws ServiceValidationException

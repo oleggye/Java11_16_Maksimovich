@@ -56,7 +56,7 @@ public class Controller extends HttpServlet {
 	}
 
 	/**
-	 * Method, which processing both POST and GET request from a server client.
+	 * Method, which processing both POST and GET request from a server client
 	 * and return the response.
 	 * 
 	 * Defining type of command, getting certain instance of {@link ICommand}

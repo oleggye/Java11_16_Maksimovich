@@ -220,6 +220,7 @@
 						error : function(xhr, str) {
 							showMessageInDiv(errorDivId, xhr.responseText);
 
+
 							$(addCompetitionButtonId).prop('disabled', true);
 						}
 					});

@@ -71,12 +71,13 @@ public class TakeDataForCompetition implements ICommand {
 		ServiceFactory factory = ServiceFactory.getInstance();
 		try {
 			int idSport = getIdSport(request);
-
+			
 			List<Tournament> tournamentList = factory.getTournamentService().obtainTournamentListByIdSport(idSport,
 					locale);
 			List<Team> teamList = factory.getTeamService().obtainTeamListByIdSport(idSport, locale);
 			List<Country> countryList = factory.getCountryService().obtainCountryList(locale);
 
+			//because of three lists
 			List<Object> attributeList = new ArrayList<>(3);
 
 			attributeList.add(tournamentList);
@@ -89,11 +90,11 @@ public class TakeDataForCompetition implements ICommand {
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+			statusCode = HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 			response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
 			message = LocalizationBundle.getProperty(locale, INTERNAL_SERVER_ERROR_MESSAGE_KEY);
 
-		} catch (ServiceValidationException | NumberFormatException e) {
+		} catch (ServiceValidationException e) {
 			LOGGER.log(Level.WARN, e);
 			statusCode = HttpServletResponse.SC_BAD_REQUEST;
 			response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);

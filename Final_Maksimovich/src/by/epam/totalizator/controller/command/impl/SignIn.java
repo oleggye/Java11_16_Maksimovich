@@ -78,8 +78,7 @@ public class SignIn implements ICommand {
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			page = ConfigurationManager.getProperty(PageKeyStore.INTERNAL_ERROR_PAGE_KEY);
-			request.getRequestDispatcher(page).forward(request, response);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 		} catch (ServiceValidationException e) {
 			LOGGER.log(Level.WARN, e);

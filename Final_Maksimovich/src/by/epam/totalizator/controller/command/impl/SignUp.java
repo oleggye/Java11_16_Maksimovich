@@ -22,10 +22,8 @@ import by.epam.totalizator.bean.build.SecretBuilder;
 import by.epam.totalizator.bean.build.UserBuilder;
 import by.epam.totalizator.controller.command.ICommand;
 import by.epam.totalizator.controller.util.AttributeNameStore;
-import by.epam.totalizator.controller.util.PageKeyStore;
 import by.epam.totalizator.controller.util.ParamNameStore;
 import by.epam.totalizator.controller.util.UtilClass;
-import by.epam.totalizator.resource.ConfigurationManager;
 import by.epam.totalizator.resource.LocalizationBundle;
 import by.epam.totalizator.service.exception.ServiceException;
 import by.epam.totalizator.service.exception.ServiceValidationException;
@@ -97,9 +95,7 @@ public class SignUp implements ICommand {
 
 			} catch (ServiceException e) {
 				LOGGER.log(Level.ERROR, e);
-
-				page = ConfigurationManager.getProperty(PageKeyStore.INTERNAL_ERROR_PAGE_KEY);
-				request.getRequestDispatcher(page).forward(request, response);
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 			} catch (ServiceValidationException e) {
 				LOGGER.log(Level.WARN, e);

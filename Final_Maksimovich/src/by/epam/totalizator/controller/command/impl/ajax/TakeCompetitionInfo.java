@@ -76,11 +76,11 @@ public class TakeCompetitionInfo implements ICommand {
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+			statusCode = HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 			response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);
 			message = LocalizationBundle.getProperty(locale, INTERNAL_SERVER_ERROR_MESSAGE_KEY);
 
-		} catch (ServiceValidationException | NumberFormatException e) {
+		} catch (ServiceValidationException e) {
 			LOGGER.log(Level.WARN, e);
 			statusCode = HttpServletResponse.SC_BAD_REQUEST;
 			response.setContentType(RESPONSE_TEXT_CONTENT_TYPE);

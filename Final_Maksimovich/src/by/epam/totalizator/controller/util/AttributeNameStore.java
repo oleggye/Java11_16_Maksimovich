@@ -1,7 +1,7 @@
 package by.epam.totalizator.controller.util;
 
 /**
- * Class contains attribute names constant
+ * Class contains constant attribute names
  */
 public final class AttributeNameStore {
 

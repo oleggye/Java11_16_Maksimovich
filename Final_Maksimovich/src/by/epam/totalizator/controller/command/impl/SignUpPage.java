@@ -72,12 +72,12 @@ public class SignUpPage implements ICommand {
 			request.getSession().setAttribute(AttributeNameStore.ATTRIBUTE_PREVIOUS_PAGE_ULR, COMMAND_URL);
 
 			page = ConfigurationManager.getProperty(PageKeyStore.SIGN_UP_PAGE_KEY);
+			request.getRequestDispatcher(page).forward(request, response);
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			page = ConfigurationManager.getProperty(PageKeyStore.INTERNAL_ERROR_PAGE_KEY);
-		}
-		request.getRequestDispatcher(page).forward(request, response);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}	
 	}
 
 	/**

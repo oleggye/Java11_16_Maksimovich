@@ -78,7 +78,7 @@ public class SetRate implements ICommand {
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+			statusCode = HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 			message = LocalizationBundle.getProperty(locale, INTERNAL_SERVER_ERROR_MESSAGE_KEY);
 
 		} catch (ServiceValidationException e) {

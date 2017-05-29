@@ -43,9 +43,7 @@ public class ClientServiceTest {
 
 	@Test
 	public void testObtainUserList() throws ServiceException, ServiceValidationException {
-		for (int i = 0; i < 10; i++) {
-			assertFalse(executeFucntion().isEmpty());
-		}
+		assertFalse(executeFucntion().isEmpty());
 	}
 
 	private List<User> executeFucntion() throws ServiceException, ServiceValidationException {

@@ -46,7 +46,7 @@ public class HomePage implements ICommand {
 	/**
 	 * page refresh rate in seconds
 	 */
-	private static final int REFRESH_TIME_S = 10;
+	private static final int REFRESH_TIME_S = 20;
 	
 	/**
 	 * Performs a service level call and takes {@link java.util.List} of
@@ -101,17 +101,18 @@ public class HomePage implements ICommand {
 
 			page = ConfigurationManager.getProperty(PageKeyStore.HOME_PAGE_KEY);
 			setPageRefreshTime(response);
+			request.getRequestDispatcher(page).forward(request, response);
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			page = ConfigurationManager.getProperty(PageKeyStore.INTERNAL_ERROR_PAGE_KEY);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 		} catch (ServiceValidationException e) {
 			LOGGER.log(Level.WARN, e);
 			page = (String) request.getSession().getAttribute(AttributeNameStore.ATTRIBUTE_PREVIOUS_PAGE_ULR);
 			request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE, e.getMessage());
+			request.getRequestDispatcher(page).forward(request, response);
 		}
-		request.getRequestDispatcher(page).forward(request, response);
 	}
 
 	/**

@@ -41,5 +41,4 @@ public class CompetitionDAOTest {
 	public void testSetCompetitionResult() throws DAOException {
 		competitioDAO.setCompetitionResult(ID_COMPETITION, RESULT);
 	}
-
 }

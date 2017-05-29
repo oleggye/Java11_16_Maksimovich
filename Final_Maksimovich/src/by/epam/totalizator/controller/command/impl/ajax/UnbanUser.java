@@ -73,10 +73,10 @@ public class UnbanUser implements ICommand {
 
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+			statusCode = HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 			message = LocalizationBundle.getProperty(locale, INTERNAL_SERVER_ERROR_MESSAGE_KEY);
 
-		} catch (ServiceValidationException | NumberFormatException e) {
+		} catch (ServiceValidationException e) {
 			LOGGER.log(Level.WARN, e);
 			statusCode = HttpServletResponse.SC_BAD_REQUEST;
 			message = LocalizationBundle.getProperty(locale, WRONG_PARAM_MESSAGE_KEY) + e.getMessage();

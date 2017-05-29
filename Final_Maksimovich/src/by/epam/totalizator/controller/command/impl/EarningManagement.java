@@ -94,17 +94,18 @@ public class EarningManagement implements ICommand {
 			request.getSession().setAttribute(AttributeNameStore.ATTRIBUTE_PREVIOUS_PAGE_ULR, pageUrl);
 
 			page = ConfigurationManager.getProperty(PageKeyStore.EARNING_MANAGEMENT_PAGE_KEY);
-
+			request.getRequestDispatcher(page).forward(request, response);
+			
 		} catch (ServiceException e) {
 			LOGGER.log(Level.ERROR, e);
-			page = ConfigurationManager.getProperty(PageKeyStore.INTERNAL_ERROR_PAGE_KEY);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 		} catch (ServiceValidationException e) {
 			LOGGER.log(Level.ERROR, e);
 			page = (String) request.getSession().getAttribute(AttributeNameStore.ATTRIBUTE_PREVIOUS_PAGE_ULR);
 			request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE, e.getMessage());
+			request.getRequestDispatcher(page).forward(request, response);
 		}
-		request.getRequestDispatcher(page).forward(request, response);
 	}
 
 	/**

@@ -50,7 +50,7 @@ public final class UtilClass {
 	 * 
 	 * @param dateParam
 	 *            a string that contains date
-	 * @return parse date or if happened {@link IllegalArgumentException}
+	 * @return parsed date or if happened {@link IllegalArgumentException} - 
 	 *         returns null
 	 */
 	public static Date parseDate(String dateParam) {
@@ -70,8 +70,8 @@ public final class UtilClass {
 	 * 
 	 * @param valueParam
 	 *            a string that contains value
-	 * @return parse #BigDecimal value or if happened
-	 *         {@link NumberFormatException} returns null
+	 * @return parsed #BigDecimal value or if happened
+	 *         {@link NumberFormatException} - returns null
 	 */
 	public static BigDecimal parseBigDecimal(String valueParam) {
 		BigDecimal value;
@@ -89,7 +89,7 @@ public final class UtilClass {
 	 * 
 	 * @param idParam
 	 *            a string that contains id
-	 * @return parse date or if happened {@link NumberFormatException} returns
+	 * @return parsed id value or if happened {@link NumberFormatException} - returns
 	 *         {@link #DEFAULT_VALUE}
 	 */
 	public static int parseId(String idParam) {
