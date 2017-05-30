@@ -22,8 +22,10 @@ import by.epam.totalizator.bean.build.SecretBuilder;
 import by.epam.totalizator.bean.build.UserBuilder;
 import by.epam.totalizator.controller.command.ICommand;
 import by.epam.totalizator.controller.util.AttributeNameStore;
+import by.epam.totalizator.controller.util.PageKeyStore;
 import by.epam.totalizator.controller.util.ParamNameStore;
 import by.epam.totalizator.controller.util.UtilClass;
+import by.epam.totalizator.resource.ConfigurationManager;
 import by.epam.totalizator.resource.LocalizationBundle;
 import by.epam.totalizator.service.exception.ServiceException;
 import by.epam.totalizator.service.exception.ServiceValidationException;
@@ -76,44 +78,42 @@ public class SignUp implements ICommand {
 		String page = null;
 
 		Locale locale = getLocale(request);
-		String login = request.getParameter(ParamNameStore.PARAM_NAME_EMAIL);
 
-		if (login != null) {
+		ServiceFactory factory = ServiceFactory.getInstance();
 
-			ServiceFactory factory = ServiceFactory.getInstance();
+		try {
 
-			try {
+			User user = parseRequestParam(request);
 
-				User user = parseRequestParam(request);
+			factory.getClientService().checkLogin(user.getEmail(), locale);
 
-				factory.getClientService().checkLogin(login, locale);
+			factory.getClientService().registration(user);
 
-				factory.getClientService().registration(user);
+			page = SIGN_IN_PAGE_URL;
+			response.sendRedirect(page);
 
-				page = SIGN_IN_PAGE_URL;
-				response.sendRedirect(page);
+		} catch (ServiceException e) {
+			LOGGER.log(Level.ERROR, e);
 
-			} catch (ServiceException e) {
-				LOGGER.log(Level.ERROR, e);
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			page = ConfigurationManager.getProperty(PageKeyStore.INTERNAL_ERROR_PAGE_KEY);
+			request.getRequestDispatcher(page).forward(request, response);
 
-			} catch (ServiceValidationException e) {
-				LOGGER.log(Level.WARN, e);
+		} catch (ServiceValidationException e) {
+			LOGGER.log(Level.WARN, e);
 
-				page = SING_UP_PAGE_URL;
+			page = SING_UP_PAGE_URL;
 
-				if (e.getMessage() != null) {
-					request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE, e.getMessage());
-				}
-				request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE_SET, e.getErrorSet());
-				request.getRequestDispatcher(page).forward(request, response);
-
-			} catch (IllegalArgumentException e) {
-				LOGGER.log(Level.WARN, e);
-				page = SING_UP_PAGE_URL;
+			if (e.getMessage() != null) {
 				request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE, e.getMessage());
-				request.getRequestDispatcher(page).forward(request, response);
 			}
+			request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE_SET, e.getErrorSet());
+			request.getRequestDispatcher(page).forward(request, response);
+
+		} catch (IllegalArgumentException e) {
+			LOGGER.log(Level.WARN, e);
+			page = SING_UP_PAGE_URL;
+			request.setAttribute(AttributeNameStore.ATTRIBUTE_ERROR_MESSAGE, e.getMessage());
+			request.getRequestDispatcher(page).forward(request, response);
 		}
 	}
 
@@ -127,8 +127,7 @@ public class SignUp implements ICommand {
 		String repeatedPassword = request.getParameter(ParamNameStore.PARAM_NAME_REPEATED_PASSWORD);
 
 		if (!password.equals(repeatedPassword)) {
-			throw new IllegalArgumentException(
-					LocalizationBundle.getProperty(locale, PASSWORD_CONFIRMATION_ERROR_KEY));
+			throw new IllegalArgumentException(LocalizationBundle.getProperty(locale, PASSWORD_CONFIRMATION_ERROR_KEY));
 		}
 
 		UserBuilder userBuilder = new UserBuilder()
@@ -137,27 +136,28 @@ public class SignUp implements ICommand {
 				.buildEmail(request.getParameter(ParamNameStore.PARAM_NAME_EMAIL));
 
 		Country country = new CountryBuilder()
-							.buildId(getId(request, ParamNameStore.PARAM_NAME_ID_COUNTRY))
-							.build();
+									.buildId(getId(request, ParamNameStore.PARAM_NAME_ID_COUNTRY))
+									.build();
 
 		Phone phone = new PhoneBuilder()
-						.buildCode(request.getParameter(ParamNameStore.PARAM_NAME_PHONE_CODE))
-						.buildPhoneNumber(request.getParameter(ParamNameStore.PARAM_NAME_PHONE_NUMBER))
-						.build();
-		
-		Secret secret = new SecretBuilder()
-							.buildSecretQuestionId(getId(request, ParamNameStore.PARAM_NAME_SECRET_QUESTION))
-							.buidSecretAnswer(request.getParameter(ParamNameStore.PARAM_NAME_SECRET_ANSWER))
+							.buildCode(request.getParameter(ParamNameStore.PARAM_NAME_PHONE_CODE))
+							.buildPhoneNumber(request.getParameter(ParamNameStore.PARAM_NAME_PHONE_NUMBER))
 							.build();
 
+		Secret secret = new SecretBuilder()
+						.buildSecretQuestionId(getId(request, ParamNameStore.PARAM_NAME_SECRET_QUESTION))
+						.buidSecretAnswer(request.getParameter(ParamNameStore.PARAM_NAME_SECRET_ANSWER))
+						.build();
+
 		User user = userBuilder.buildCountry(country)
-				.buildPhone(phone)
-				.buildCurrency(request.getParameter(ParamNameStore.PARAM_NAME_CURRENCY))
-				.buildCity(request.getParameter(ParamNameStore.PARAM_NAME_CITY))
-				.buildDateOfBirth(getDate(request))
-				.buildPassword(password)
-				.buildSecret(secret)
-				.buildLocale(locale).build();
+							   .buildPhone(phone)
+							   .buildCurrency(request.getParameter(ParamNameStore.PARAM_NAME_CURRENCY))
+							   .buildCity(request.getParameter(ParamNameStore.PARAM_NAME_CITY))
+							   .buildDateOfBirth(getDate(request))
+							   .buildPassword(password)
+							   .buildSecret(secret)
+							   .buildLocale(locale)
+							   .build();
 
 		return user;
 	}
